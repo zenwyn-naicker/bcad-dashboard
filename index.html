@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BCAD Year 3 - SEM 1</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ── Light Theme (default) ── */
+  :root, [data-theme="light"] {
+    --prog7313: #0EA5E9;
+    --insy7311: #22C55E;
+    --prog7311: #F97316;
+    --irit7311: #8B5CF6;
+    --irit7311-bg: #F5F3FF;
+
+    --bg: #F8FAFC;
+    --surface: #FFFFFF;
+    --surface-alt: #F9FAFB;
+    --border: #E2E8F0;
+    --border-light: #F1F5F9;
+    --text: #111827;
+    --text-secondary: #374151;
+    --text-dim: #6B7280;
+    --hover-bg: #FAFBFC;
+    --tag-bg: #F1F5F9;
+    --shadow: 0 1px 3px rgba(0,0,0,0.04);
+    --tooltip-bg: #111827;
+    --tooltip-text: #FFFFFF;
+    --toggle-bg: #E2E8F0;
+    --toggle-knob: #FFFFFF;
+    --toggle-icon-sun: #F59E0B;
+    --toggle-icon-moon: #6B7280;
+  }
+
+  /* ── Dark Theme ── */
+  [data-theme="dark"] {
+    --prog7313: #38BDF8;
+    --insy7311: #4ADE80;
+    --prog7311: #FB923C;
+    --irit7311: #A78BFA;
+    --irit7311-bg: rgba(167,139,250,0.1);
+
+    --bg: #0F172A;
+    --surface: #1E293B;
+    --surface-alt: #1A2332;
+    --border: #334155;
+    --border-light: rgba(255,255,255,0.06);
+    --text: #F1F5F9;
+    --text-secondary: #CBD5E1;
+    --text-dim: #94A3B8;
+    --hover-bg: rgba(255,255,255,0.04);
+    --tag-bg: rgba(255,255,255,0.08);
+    --shadow: 0 1px 3px rgba(0,0,0,0.2);
+    --tooltip-bg: #F1F5F9;
+    --tooltip-text: #0F172A;
+    --toggle-bg: #334155;
+    --toggle-knob: #0F172A;
+    --toggle-icon-sun: #475569;
+    --toggle-icon-moon: #A78BFA;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 2rem;
+    min-height: 100vh;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+
+  /* ── Header ── */
+  .header {
+    margin: 0 auto 1.75rem;
+    max-width: 1150px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .header-left h1 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+  .header-left .sub {
+    font-size: 0.76rem;
+    color: var(--text-dim);
+    font-weight: 500;
+    margin-top: 0.15rem;
+  }
+  .legend {
+    display: flex;
+    gap: 0.45rem;
+    flex-wrap: nowrap;
+  }
+  .legend-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 0.3rem 0.65rem;
+    border-radius: 7px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+  }
+  .legend-chip .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    transition: background 0.3s ease;
+  }
+
+  /* ── Theme Toggle ── */
+  .theme-toggle {
+    position: relative;
+    width: 56px;
+    height: 30px;
+    border-radius: 50px;
+    background: var(--toggle-bg);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    padding: 0 4px;
+  }
+  .theme-toggle:hover {
+    border-color: var(--text-dim);
+  }
+  .theme-toggle .toggle-knob {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--toggle-knob);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  [data-theme="dark"] .theme-toggle .toggle-knob {
+    transform: translateX(26px);
+    background: #1E293B;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+  }
+  .theme-toggle .icon-sun,
+  .theme-toggle .icon-moon {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    transition: all 0.3s ease;
+  }
+  .theme-toggle .icon-sun {
+    color: var(--toggle-icon-sun);
+    opacity: 1;
+  }
+  .theme-toggle .icon-moon {
+    color: var(--toggle-icon-moon);
+    opacity: 0;
+  }
+  [data-theme="dark"] .theme-toggle .icon-sun { opacity: 0; }
+  [data-theme="dark"] .theme-toggle .icon-moon { opacity: 1; color: var(--toggle-icon-moon); }
+
+  /* Sun / Moon backgrounds in toggle track */
+  .theme-toggle .track-icons {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 7px;
+    pointer-events: none;
+  }
+  .track-icons .track-sun,
+  .track-icons .track-moon {
+    font-size: 0.7rem;
+    transition: opacity 0.3s ease;
+  }
+  .track-icons .track-sun { opacity: 0; }
+  .track-icons .track-moon { opacity: 0.4; }
+  [data-theme="dark"] .track-icons .track-sun { opacity: 0.4; }
+  [data-theme="dark"] .track-icons .track-moon { opacity: 0; }
+
+  /* ── Calendar Grid ── */
+  .calendars-wrapper {
+    position: relative;
+    max-width: 1150px;
+    margin: 0 auto;
+  }
+  .calendars {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    gap: 1rem;
+    padding-bottom: 0.5rem;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .calendars::-webkit-scrollbar { display: none; }
+  .cal-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 1.3rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: all 0.15s;
+    line-height: 1;
+  }
+  .cal-nav:hover { background: var(--hover-bg); border-color: var(--text-dim); }
+  .cal-nav-prev { left: -18px; }
+  .cal-nav-next { right: -18px; }
+  .cal-dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.4rem;
+    margin-top: 0.75rem;
+  }
+  .cal-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--border);
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  .cal-dot.active {
+    background: var(--text);
+    transform: scale(1.2);
+  }
+  .cal-dot:hover { background: var(--text-dim); }
+  .cal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.25rem;
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+  }
+  .cal-slide {
+    min-width: calc((100% - 2rem) / 3);
+    flex: 0 0 calc((100% - 2rem) / 3);
+    display: flex;
+    justify-content: center;
+    scroll-snap-align: start;
+    box-sizing: border-box;
+  }
+  .cal-slide .cal {
+    width: 100%;
+  }
+  .cal-title {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.85rem;
+    padding-left: 0.1rem;
+    color: var(--text);
+  }
+  .cal-title span {
+    font-weight: 500;
+    color: var(--text-dim);
+    font-size: 0.85rem;
+  }
+
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.3rem;
+  }
+  .cal-dow {
+    text-align: center;
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text);
+    padding-bottom: 0.4rem;
+    transition: color 0.3s ease;
+  }
+
+  .cal-day {
+    position: relative;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--text);
+    transition: all 0.15s;
+  }
+  .cal-day.empty { visibility: hidden; }
+  .cal-day.today {
+    font-weight: 800;
+  }
+  .cal-day.today::before {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    border: 2.5px solid var(--prog7313);
+    border-radius: 50%;
+    z-index: 0;
+  }
+  .cal-day.has-event.today::before {
+    border-color: #fff;
+  }
+
+  .cal-day.has-event {
+    font-weight: 700;
+    cursor: default;
+    border-radius: 10px;
+    color: #fff;
+  }
+
+  .cal-day.e-prog7313 { background: var(--prog7313); }
+  .cal-day.e-insy7311 { background: var(--insy7311); }
+  .cal-day.e-prog7311 { background: var(--prog7311); }
+  .cal-day.e-irit7311 { background: var(--irit7311); }
+
+  /* Tooltip */
+  .cal-day.has-event .tip {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--tooltip-bg);
+    color: var(--tooltip-text);
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 0.35rem 0.6rem;
+    border-radius: 7px;
+    white-space: nowrap;
+    z-index: 10;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    pointer-events: none;
+    transition: background 0.3s ease;
+  }
+  .cal-day.has-event .tip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: var(--tooltip-bg);
+    transition: border-color 0.3s ease;
+  }
+  .cal-day.has-event:hover .tip { display: block; }
+  .tip-lecturer {
+    color: rgba(255,255,255,0.55);
+    font-weight: 500;
+  }
+  [data-theme="dark"] .tip-lecturer {
+    color: rgba(15,23,42,0.55);
+  }
+
+  /* ── Past Days & Events ── */
+  .cal-day.past { opacity: 0.3; }
+  .cal-day.has-event.past { opacity: 0.35; filter: grayscale(0.5); }
+
+  .ev-row.past {
+    opacity: 0.4;
+  }
+  .month-group-label.past { opacity: 0.4; }
+
+  /* ── Event List ── */
+  .event-list {
+    margin: 1.25rem auto 0;
+    max-width: 1150px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+  }
+  .event-list-header {
+    padding: 0.85rem 1.25rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .month-group-label {
+    padding: 0.55rem 1.25rem;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    background: var(--surface-alt);
+    border-bottom: 1px solid var(--border-light);
+    transition: all 0.3s ease;
+  }
+
+  .ev-row {
+    display: grid;
+    grid-template-columns: 4px 90px 1fr auto;
+    gap: 0 1rem;
+    align-items: center;
+    padding: 0.6rem 1.25rem;
+    border-bottom: 1px solid var(--border-light);
+    font-size: 0.82rem;
+    transition: all 0.2s ease;
+    min-height: 44px;
+  }
+  .ev-row:last-child { border-bottom: none; }
+  .ev-row:hover { background: var(--hover-bg); }
+
+  .ev-bar {
+    width: 4px;
+    height: 24px;
+    border-radius: 4px;
+    transition: background 0.3s ease;
+  }
+  .ev-date {
+    font-weight: 700;
+    font-size: 0.75rem;
+    color: var(--text);
+    white-space: nowrap;
+  }
+  .ev-name {
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .ev-name small {
+    font-weight: 500;
+    color: var(--text-dim);
+    margin-left: 0.4rem;
+    font-size: 0.72rem;
+  }
+  .ev-tag {
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.2rem 0.55rem;
+    border-radius: 5px;
+    background: var(--tag-bg);
+    color: var(--text-secondary);
+    white-space: nowrap;
+    transition: all 0.3s ease;
+  }
+
+  /* ── Footer ── */
+  .materials-section {
+    margin: 1.25rem auto 0;
+    max-width: 1150px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+  }
+  .materials-header {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-bottom: 1px solid var(--border);
+  }
+  .materials-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.65rem;
+    padding: 0.75rem 1rem;
+  }
+  .mat-link {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.65rem 1rem;
+    text-decoration: none;
+    color: var(--text);
+    font-size: 0.82rem;
+    font-weight: 600;
+    border-radius: 8px;
+    border: 1.5px solid var(--border-light);
+    background: var(--surface);
+    transition: all 0.15s ease;
+    cursor: pointer;
+  }
+  .mat-link:hover {
+    background: var(--hover-bg);
+    border-color: var(--text-dim);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  }
+  .mat-link:active {
+    transform: translateY(0);
+    box-shadow: none;
+  }
+  .mat-link .mat-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .mat-link .mat-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    flex: 1;
+  }
+  .mat-link .mat-code {
+    font-weight: 700;
+    font-size: 0.8rem;
+  }
+  .mat-link .mat-lecturer {
+    font-weight: 500;
+    font-size: 0.68rem;
+    color: var(--text-dim);
+  }
+
+  .footer-link {
+    margin: 1.25rem auto 0;
+    max-width: 1150px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.75rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text);
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+  }
+  .footer-link:hover { border-color: var(--prog7313); }
+  .footer-link .fl-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--irit7311-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+  .footer-link a {
+    color: var(--prog7313);
+    font-weight: 700;
+    text-decoration: none;
+    border-bottom: 2px solid var(--prog7313);
+    padding-bottom: 1px;
+    transition: opacity 0.15s;
+  }
+  .footer-link a:hover { opacity: 0.75; }
+
+  @media print {
+    body { padding: 1rem; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .theme-toggle { display: none; }
+  }
+  @media (max-width: 750px) {
+    .cal-nav-prev { left: -4px; }
+    .cal-nav-next { right: -4px; }
+    .cal-slide {
+      min-width: 100%;
+      flex: 0 0 100%;
+      scroll-snap-align: center;
+    }
+    .materials-grid { grid-template-columns: repeat(2, 1fr); }
+    .ev-row { grid-template-columns: 4px 70px 1fr auto; gap: 0 0.5rem; padding: 0.5rem 0.75rem; font-size: 0.75rem; }
+    .ev-date { font-size: 0.68rem; }
+    .ev-name { font-size: 0.75rem; }
+    .ev-tag { font-size: 0.55rem; padding: 0.15rem 0.4rem; }
+    .header-left h1 { font-size: 1.2rem; }
+    .legend { gap: 0.3rem; }
+    .legend-chip {
+      font-size: 0.58rem;
+      padding: 0.25rem 0.45rem;
+      border-radius: 5px;
+    }
+    .legend-chip .dot {
+      width: 6px;
+      height: 6px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div class="header-left">
+      <h1>BCAD Year 3 · Semester 1</h1>
+      <div class="sub">PAS - 17 Feb 2026 · V2</div>
+    </div>
+    <div class="theme-toggle" onclick="toggleTheme()" title="Toggle light/dark mode">
+      <div class="track-icons">
+        <span class="track-sun">☀️</span>
+        <span class="track-moon">🌙</span>
+      </div>
+      <div class="toggle-knob">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 01.818.162z" clip-rule="evenodd"/></svg>
+      </div>
+    </div>
+  </div>
+  <div class="legend">
+    <div class="legend-chip"><div class="dot" style="background:var(--prog7313)"></div>PROG7313</div>
+    <div class="legend-chip"><div class="dot" style="background:var(--insy7311)"></div>INSY7311</div>
+    <div class="legend-chip"><div class="dot" style="background:var(--prog7311)"></div>PROG7311</div>
+    <div class="legend-chip"><div class="dot" style="background:var(--irit7311)"></div>IRIT7311</div>
+  </div>
+</div>
+
+<div class="calendars-wrapper">
+  <button class="cal-nav cal-nav-prev" onclick="scrollCal(-1)" aria-label="Previous month">‹</button>
+  <button class="cal-nav cal-nav-next" onclick="scrollCal(1)" aria-label="Next month">›</button>
+  <div class="calendars" id="calScroller">
+
+  <!-- JANUARY 2026 -->
+  <div class="cal-slide"><div class="cal" data-month="0">
+    <div class="cal-title">January <span>2026</span></div>
+    <div class="cal-grid">
+      <div class="cal-dow">Sun</div><div class="cal-dow">Mon</div><div class="cal-dow">Tue</div><div class="cal-dow">Wed</div><div class="cal-dow">Thu</div><div class="cal-dow">Fri</div><div class="cal-dow">Sat</div>
+      <div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day">1</div><div class="cal-day">2</div><div class="cal-day weekend">3</div>
+      <div class="cal-day weekend">4</div><div class="cal-day">5</div><div class="cal-day">6</div><div class="cal-day">7</div><div class="cal-day">8</div><div class="cal-day">9</div><div class="cal-day weekend">10</div>
+      <div class="cal-day weekend">11</div><div class="cal-day">12</div><div class="cal-day">13</div><div class="cal-day">14</div><div class="cal-day">15</div><div class="cal-day">16</div><div class="cal-day weekend">17</div>
+      <div class="cal-day weekend">18</div><div class="cal-day">19</div><div class="cal-day">20</div><div class="cal-day">21</div><div class="cal-day">22</div><div class="cal-day">23</div><div class="cal-day weekend">24</div>
+      <div class="cal-day weekend">25</div><div class="cal-day">26</div><div class="cal-day">27</div><div class="cal-day">28</div><div class="cal-day">29</div><div class="cal-day">30</div><div class="cal-day weekend">31</div>
+    </div>
+  </div></div>
+
+  <!-- FEBRUARY 2026 -->
+  <div class="cal-slide"><div class="cal" data-month="1">
+    <div class="cal-title">February <span>2026</span></div>
+    <div class="cal-grid">
+      <div class="cal-dow">Sun</div><div class="cal-dow">Mon</div><div class="cal-dow">Tue</div><div class="cal-dow">Wed</div><div class="cal-dow">Thu</div><div class="cal-dow">Fri</div><div class="cal-dow">Sat</div>
+      <div class="cal-day weekend">1</div><div class="cal-day">2</div><div class="cal-day">3</div><div class="cal-day">4</div><div class="cal-day">5</div><div class="cal-day">6</div><div class="cal-day weekend">7</div>
+      <div class="cal-day weekend">8</div><div class="cal-day">9</div><div class="cal-day">10</div><div class="cal-day">11</div><div class="cal-day">12</div><div class="cal-day">13</div><div class="cal-day weekend">14</div>
+      <div class="cal-day weekend">15</div><div class="cal-day">16</div><div class="cal-day">17</div><div class="cal-day">18</div><div class="cal-day">19</div><div class="cal-day">20</div><div class="cal-day weekend">21</div>
+      <div class="cal-day weekend">22</div><div class="cal-day">23</div><div class="cal-day">24</div><div class="cal-day">25</div><div class="cal-day">26</div><div class="cal-day">27</div><div class="cal-day weekend">28</div>
+    </div>
+  </div></div>
+
+  <!-- MARCH 2026 -->
+  <div class="cal-slide"><div class="cal" data-month="2">
+    <div class="cal-title">March <span>2026</span></div>
+    <div class="cal-grid">
+      <div class="cal-dow">Sun</div><div class="cal-dow">Mon</div><div class="cal-dow">Tue</div><div class="cal-dow">Wed</div><div class="cal-dow">Thu</div><div class="cal-dow">Fri</div><div class="cal-dow">Sat</div>
+      <div class="cal-day weekend">1</div><div class="cal-day">2</div><div class="cal-day">3</div><div class="cal-day">4</div><div class="cal-day">5</div><div class="cal-day">6</div><div class="cal-day weekend">7</div>
+      <div class="cal-day weekend">8</div><div class="cal-day">9</div><div class="cal-day">10</div><div class="cal-day">11</div><div class="cal-day">12</div><div class="cal-day">13</div><div class="cal-day weekend">14</div>
+      <div class="cal-day weekend">15</div><div class="cal-day">16</div><div class="cal-day has-event e-prog7313">17<div class="tip">PROG7313 Part 1 <span class="tip-lecturer">· Ebrahim</span></div></div><div class="cal-day">18</div><div class="cal-day">19</div><div class="cal-day">20</div><div class="cal-day weekend">21</div>
+      <div class="cal-day weekend">22</div><div class="cal-day has-event e-insy7311">23<div class="tip">INSY7311 Assignment 1 <span class="tip-lecturer">· Fiona</span></div></div><div class="cal-day">24</div><div class="cal-day">25</div><div class="cal-day">26</div><div class="cal-day has-event e-prog7311">27<div class="tip">PROG7311 Part 1 <span class="tip-lecturer">· Denzyl</span></div></div><div class="cal-day weekend">28</div>
+      <div class="cal-day weekend">29</div><div class="cal-day">30</div><div class="cal-day">31</div>
+    </div>
+  </div></div>
+
+  <!-- APRIL 2026 -->
+  <div class="cal-slide"><div class="cal" data-month="3">
+    <div class="cal-title">April <span>2026</span></div>
+    <div class="cal-grid">
+      <div class="cal-dow">Sun</div><div class="cal-dow">Mon</div><div class="cal-dow">Tue</div><div class="cal-dow">Wed</div><div class="cal-dow">Thu</div><div class="cal-dow">Fri</div><div class="cal-dow">Sat</div>
+      <div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day">1</div><div class="cal-day">2</div><div class="cal-day">3</div><div class="cal-day weekend">4</div>
+      <div class="cal-day weekend">5</div><div class="cal-day">6</div><div class="cal-day">7</div><div class="cal-day">8</div><div class="cal-day">9</div><div class="cal-day">10</div><div class="cal-day weekend">11</div>
+      <div class="cal-day weekend">12</div><div class="cal-day">13</div><div class="cal-day">14</div><div class="cal-day has-event e-insy7311">15<div class="tip">INSY7311 Assignment 2 <span class="tip-lecturer">· Fiona</span></div></div><div class="cal-day">16</div><div class="cal-day">17</div><div class="cal-day weekend">18</div>
+      <div class="cal-day weekend">19</div><div class="cal-day">20</div><div class="cal-day">21</div><div class="cal-day has-event e-prog7311">22<div class="tip">PROG7311 Part 2 <span class="tip-lecturer">· Denzyl</span></div></div><div class="cal-day">23</div><div class="cal-day">24</div><div class="cal-day weekend">25</div>
+      <div class="cal-day weekend">26</div><div class="cal-day">27</div><div class="cal-day">28</div><div class="cal-day has-event e-prog7313">29<div class="tip">PROG7313 Part 2 <span class="tip-lecturer">· Ebrahim</span></div></div><div class="cal-day">30</div>
+    </div>
+  </div></div>
+
+  <!-- MAY 2026 -->
+  <div class="cal-slide"><div class="cal" data-month="4">
+    <div class="cal-title">May <span>2026</span></div>
+    <div class="cal-grid">
+      <div class="cal-dow">Sun</div><div class="cal-dow">Mon</div><div class="cal-dow">Tue</div><div class="cal-dow">Wed</div><div class="cal-dow">Thu</div><div class="cal-dow">Fri</div><div class="cal-dow">Sat</div>
+      <div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day">1</div><div class="cal-day weekend">2</div>
+      <div class="cal-day weekend">3</div><div class="cal-day has-event e-irit7311">4<div class="tip">IRIT7311 Assignment 1 <span class="tip-lecturer">· Zahra</span></div></div><div class="cal-day">5</div><div class="cal-day">6</div><div class="cal-day">7</div><div class="cal-day">8</div><div class="cal-day weekend">9</div>
+      <div class="cal-day weekend">10</div><div class="cal-day">11</div><div class="cal-day">12</div><div class="cal-day">13</div><div class="cal-day">14</div><div class="cal-day">15</div><div class="cal-day weekend">16</div>
+      <div class="cal-day weekend">17</div><div class="cal-day">18</div><div class="cal-day">19</div><div class="cal-day">20</div><div class="cal-day">21</div><div class="cal-day">22</div><div class="cal-day weekend">23</div>
+      <div class="cal-day weekend">24</div><div class="cal-day">25</div><div class="cal-day">26</div><div class="cal-day">27</div><div class="cal-day">28</div><div class="cal-day">29</div><div class="cal-day weekend">30</div>
+      <div class="cal-day weekend">31</div>
+    </div>
+  </div></div>
+
+  <!-- JUNE 2026 -->
+  <div class="cal-slide"><div class="cal" data-month="5">
+    <div class="cal-title">June <span>2026</span></div>
+    <div class="cal-grid">
+      <div class="cal-dow">Sun</div><div class="cal-dow">Mon</div><div class="cal-dow">Tue</div><div class="cal-dow">Wed</div><div class="cal-dow">Thu</div><div class="cal-dow">Fri</div><div class="cal-dow">Sat</div>
+      <div class="cal-day empty"></div><div class="cal-day">1</div><div class="cal-day">2</div><div class="cal-day">3</div><div class="cal-day">4</div><div class="cal-day">5</div><div class="cal-day weekend">6</div>
+      <div class="cal-day weekend">7</div><div class="cal-day">8</div><div class="cal-day">9</div><div class="cal-day">10</div><div class="cal-day">11</div><div class="cal-day">12</div><div class="cal-day weekend">13</div>
+      <div class="cal-day weekend">14</div><div class="cal-day">15</div><div class="cal-day">16</div><div class="cal-day">17</div><div class="cal-day">18</div><div class="cal-day">19</div><div class="cal-day weekend">20</div>
+      <div class="cal-day weekend">21</div><div class="cal-day">22</div><div class="cal-day">23</div><div class="cal-day">24</div><div class="cal-day">25</div><div class="cal-day">26</div><div class="cal-day weekend">27</div>
+      <div class="cal-day weekend">28</div><div class="cal-day">29</div><div class="cal-day">30</div>
+    </div>
+  </div></div>
+
+  <!-- JULY 2026 -->
+  <div class="cal-slide"><div class="cal" data-month="6">
+    <div class="cal-title">July <span>2026</span></div>
+    <div class="cal-grid">
+      <div class="cal-dow">Sun</div><div class="cal-dow">Mon</div><div class="cal-dow">Tue</div><div class="cal-dow">Wed</div><div class="cal-dow">Thu</div><div class="cal-dow">Fri</div><div class="cal-dow">Sat</div>
+      <div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day">1</div><div class="cal-day">2</div><div class="cal-day">3</div><div class="cal-day weekend">4</div>
+      <div class="cal-day weekend">5</div><div class="cal-day">6</div><div class="cal-day">7</div><div class="cal-day">8</div><div class="cal-day">9</div><div class="cal-day">10</div><div class="cal-day weekend">11</div>
+      <div class="cal-day weekend">12</div><div class="cal-day">13</div><div class="cal-day">14</div><div class="cal-day">15</div><div class="cal-day">16</div><div class="cal-day">17</div><div class="cal-day weekend">18</div>
+      <div class="cal-day weekend">19</div><div class="cal-day">20</div><div class="cal-day">21</div><div class="cal-day">22</div><div class="cal-day">23</div><div class="cal-day">24</div><div class="cal-day weekend">25</div>
+      <div class="cal-day weekend">26</div><div class="cal-day">27</div><div class="cal-day">28</div><div class="cal-day">29</div><div class="cal-day">30</div><div class="cal-day">31</div>
+    </div>
+  </div></div>
+
+  <!-- AUGUST 2026 -->
+  <div class="cal-slide"><div class="cal" data-month="7">
+    <div class="cal-title">August <span>2026</span></div>
+    <div class="cal-grid">
+      <div class="cal-dow">Sun</div><div class="cal-dow">Mon</div><div class="cal-dow">Tue</div><div class="cal-dow">Wed</div><div class="cal-dow">Thu</div><div class="cal-dow">Fri</div><div class="cal-dow">Sat</div>
+      <div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day weekend">1</div>
+      <div class="cal-day weekend">2</div><div class="cal-day">3</div><div class="cal-day">4</div><div class="cal-day">5</div><div class="cal-day">6</div><div class="cal-day">7</div><div class="cal-day weekend">8</div>
+      <div class="cal-day weekend">9</div><div class="cal-day">10</div><div class="cal-day">11</div><div class="cal-day">12</div><div class="cal-day">13</div><div class="cal-day">14</div><div class="cal-day weekend">15</div>
+      <div class="cal-day weekend">16</div><div class="cal-day">17</div><div class="cal-day">18</div><div class="cal-day">19</div><div class="cal-day">20</div><div class="cal-day">21</div><div class="cal-day weekend">22</div>
+      <div class="cal-day weekend">23</div><div class="cal-day">24</div><div class="cal-day">25</div><div class="cal-day">26</div><div class="cal-day">27</div><div class="cal-day">28</div><div class="cal-day weekend">29</div>
+      <div class="cal-day weekend">30</div><div class="cal-day">31</div>
+    </div>
+  </div></div>
+
+  <!-- SEPTEMBER 2026 -->
+  <div class="cal-slide"><div class="cal" data-month="8">
+    <div class="cal-title">September <span>2026</span></div>
+    <div class="cal-grid">
+      <div class="cal-dow">Sun</div><div class="cal-dow">Mon</div><div class="cal-dow">Tue</div><div class="cal-dow">Wed</div><div class="cal-dow">Thu</div><div class="cal-dow">Fri</div><div class="cal-dow">Sat</div>
+      <div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day">1</div><div class="cal-day">2</div><div class="cal-day">3</div><div class="cal-day">4</div><div class="cal-day weekend">5</div>
+      <div class="cal-day weekend">6</div><div class="cal-day">7</div><div class="cal-day">8</div><div class="cal-day">9</div><div class="cal-day">10</div><div class="cal-day">11</div><div class="cal-day weekend">12</div>
+      <div class="cal-day weekend">13</div><div class="cal-day">14</div><div class="cal-day">15</div><div class="cal-day">16</div><div class="cal-day">17</div><div class="cal-day">18</div><div class="cal-day weekend">19</div>
+      <div class="cal-day weekend">20</div><div class="cal-day">21</div><div class="cal-day">22</div><div class="cal-day">23</div><div class="cal-day">24</div><div class="cal-day">25</div><div class="cal-day weekend">26</div>
+      <div class="cal-day weekend">27</div><div class="cal-day">28</div><div class="cal-day">29</div><div class="cal-day">30</div>
+    </div>
+  </div></div>
+
+  <!-- OCTOBER 2026 -->
+  <div class="cal-slide"><div class="cal" data-month="9">
+    <div class="cal-title">October <span>2026</span></div>
+    <div class="cal-grid">
+      <div class="cal-dow">Sun</div><div class="cal-dow">Mon</div><div class="cal-dow">Tue</div><div class="cal-dow">Wed</div><div class="cal-dow">Thu</div><div class="cal-dow">Fri</div><div class="cal-dow">Sat</div>
+      <div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day">1</div><div class="cal-day">2</div><div class="cal-day weekend">3</div>
+      <div class="cal-day weekend">4</div><div class="cal-day">5</div><div class="cal-day">6</div><div class="cal-day">7</div><div class="cal-day">8</div><div class="cal-day">9</div><div class="cal-day weekend">10</div>
+      <div class="cal-day weekend">11</div><div class="cal-day">12</div><div class="cal-day">13</div><div class="cal-day">14</div><div class="cal-day">15</div><div class="cal-day">16</div><div class="cal-day weekend">17</div>
+      <div class="cal-day weekend">18</div><div class="cal-day">19</div><div class="cal-day">20</div><div class="cal-day">21</div><div class="cal-day">22</div><div class="cal-day">23</div><div class="cal-day weekend">24</div>
+      <div class="cal-day weekend">25</div><div class="cal-day">26</div><div class="cal-day">27</div><div class="cal-day">28</div><div class="cal-day">29</div><div class="cal-day">30</div><div class="cal-day weekend">31</div>
+    </div>
+  </div></div>
+
+  <!-- NOVEMBER 2026 -->
+  <div class="cal-slide"><div class="cal" data-month="10">
+    <div class="cal-title">November <span>2026</span></div>
+    <div class="cal-grid">
+      <div class="cal-dow">Sun</div><div class="cal-dow">Mon</div><div class="cal-dow">Tue</div><div class="cal-dow">Wed</div><div class="cal-dow">Thu</div><div class="cal-dow">Fri</div><div class="cal-dow">Sat</div>
+      <div class="cal-day weekend">1</div><div class="cal-day">2</div><div class="cal-day">3</div><div class="cal-day">4</div><div class="cal-day">5</div><div class="cal-day">6</div><div class="cal-day weekend">7</div>
+      <div class="cal-day weekend">8</div><div class="cal-day">9</div><div class="cal-day">10</div><div class="cal-day">11</div><div class="cal-day">12</div><div class="cal-day">13</div><div class="cal-day weekend">14</div>
+      <div class="cal-day weekend">15</div><div class="cal-day">16</div><div class="cal-day">17</div><div class="cal-day">18</div><div class="cal-day">19</div><div class="cal-day">20</div><div class="cal-day weekend">21</div>
+      <div class="cal-day weekend">22</div><div class="cal-day">23</div><div class="cal-day">24</div><div class="cal-day">25</div><div class="cal-day">26</div><div class="cal-day">27</div><div class="cal-day weekend">28</div>
+      <div class="cal-day weekend">29</div><div class="cal-day">30</div>
+    </div>
+  </div></div>
+
+  <!-- DECEMBER 2026 -->
+  <div class="cal-slide"><div class="cal" data-month="11">
+    <div class="cal-title">December <span>2026</span></div>
+    <div class="cal-grid">
+      <div class="cal-dow">Sun</div><div class="cal-dow">Mon</div><div class="cal-dow">Tue</div><div class="cal-dow">Wed</div><div class="cal-dow">Thu</div><div class="cal-dow">Fri</div><div class="cal-dow">Sat</div>
+      <div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day">1</div><div class="cal-day">2</div><div class="cal-day">3</div><div class="cal-day">4</div><div class="cal-day weekend">5</div>
+      <div class="cal-day weekend">6</div><div class="cal-day">7</div><div class="cal-day">8</div><div class="cal-day">9</div><div class="cal-day">10</div><div class="cal-day">11</div><div class="cal-day weekend">12</div>
+      <div class="cal-day weekend">13</div><div class="cal-day">14</div><div class="cal-day">15</div><div class="cal-day">16</div><div class="cal-day">17</div><div class="cal-day">18</div><div class="cal-day weekend">19</div>
+      <div class="cal-day weekend">20</div><div class="cal-day">21</div><div class="cal-day">22</div><div class="cal-day">23</div><div class="cal-day">24</div><div class="cal-day">25</div><div class="cal-day weekend">26</div>
+      <div class="cal-day weekend">27</div><div class="cal-day">28</div><div class="cal-day">29</div><div class="cal-day">30</div><div class="cal-day">31</div>
+    </div>
+  </div></div>
+
+  </div>
+  <div class="cal-dots" id="calDots"></div>
+</div>
+<div class="event-list">
+  <div class="event-list-header">Deadlines</div>
+
+  <div class="month-group-label" data-month="2">March</div>
+  <div class="ev-row" data-date="2026-03-17">
+    <div class="ev-bar" style="background:var(--prog7313)"></div>
+    <div class="ev-date">Tue 17th</div>
+    <div class="ev-name">PROG7313 Part 1 <small>Ebrahim</small></div>
+    <div class="ev-tag">ARC</div>
+  </div>
+  <div class="ev-row" data-date="2026-03-23">
+    <div class="ev-bar" style="background:var(--insy7311)"></div>
+    <div class="ev-date">Mon 23rd</div>
+    <div class="ev-name">INSY7311 Assignment 1 <small>Fiona</small></div>
+    <div class="ev-tag">ARC</div>
+  </div>
+  <div class="ev-row" data-date="2026-03-27">
+    <div class="ev-bar" style="background:var(--prog7311)"></div>
+    <div class="ev-date">Fri 27th</div>
+    <div class="ev-name">PROG7311 Part 1 <small>Denzyl</small></div>
+    <div class="ev-tag">ARC</div>
+  </div>
+
+  <div class="month-group-label" data-month="3">April</div>
+  <div class="ev-row" data-date="2026-04-15">
+    <div class="ev-bar" style="background:var(--insy7311)"></div>
+    <div class="ev-date">Wed 15th</div>
+    <div class="ev-name">INSY7311 Assignment 2 <small>Fiona</small></div>
+    <div class="ev-tag">ARC</div>
+  </div>
+  <div class="ev-row" data-date="2026-04-22">
+    <div class="ev-bar" style="background:var(--prog7311)"></div>
+    <div class="ev-date">Wed 22nd</div>
+    <div class="ev-name">PROG7311 Part 2 <small>Denzyl</small></div>
+    <div class="ev-tag">GitHub + ARC</div>
+  </div>
+  <div class="ev-row" data-date="2026-04-29">
+    <div class="ev-bar" style="background:var(--prog7313)"></div>
+    <div class="ev-date">Wed 29th</div>
+    <div class="ev-name">PROG7313 Part 2 <small>Ebrahim</small></div>
+    <div class="ev-tag">GitHub + ARC</div>
+  </div>
+
+  <div class="month-group-label" data-month="4">May</div>
+  <div class="ev-row" data-date="2026-05-04">
+    <div class="ev-bar" style="background:var(--irit7311)"></div>
+    <div class="ev-date">Mon 4th</div>
+    <div class="ev-name">IRIT7311 Assignment 1 <small>Zahra</small></div>
+    <div class="ev-tag">ARC</div>
+  </div>
+</div>
+
+<div class="materials-section">
+  <div class="materials-header">Materials</div>
+  <div class="materials-grid">
+    <a class="mat-link" href="https://advtechonline.sharepoint.com/sites/TertiaryStudents/IIE%20Student%20Materials/Forms/Default%20View.aspx?id=%2Fsites%2FTertiaryStudents%2FIIE%20Student%20Materials%2FNew%20Student%20Materials%20CAT%2FPROG7313%2F2026%2FTerm%201&amp;viewid=db15e059%2D4f93%2D487f%2Dabda%2De538b821c7b8" target="_blank">
+      <div class="mat-dot" style="background:var(--prog7313)"></div>
+      <div class="mat-info"><span class="mat-code">PROG7313</span><span class="mat-lecturer">Ebrahim</span></div>
+      
+    </a>
+    <a class="mat-link" href="https://advtechonline.sharepoint.com/sites/TertiaryStudents/IIE%20Student%20Materials/Forms/Default%20View.aspx?id=%2Fsites%2FTertiaryStudents%2FIIE%20Student%20Materials%2FNew%20Student%20Materials%20CAT%2FINSY7311%2F2026%2FTerm%201&amp;viewid=db15e059%2D4f93%2D487f%2Dabda%2De538b821c7b8" target="_blank">
+      <div class="mat-dot" style="background:var(--insy7311)"></div>
+      <div class="mat-info"><span class="mat-code">INSY7311</span><span class="mat-lecturer">Fiona</span></div>
+      
+    </a>
+    <a class="mat-link" href="https://advtechonline.sharepoint.com/sites/TertiaryStudents/IIE%20Student%20Materials/Forms/Default%20View.aspx?id=%2Fsites%2FTertiaryStudents%2FIIE%20Student%20Materials%2FNew%20Student%20Materials%20CAT%2FPROG7311%2F2026%2FTerm%201&amp;viewid=db15e059%2D4f93%2D487f%2Dabda%2De538b821c7b8" target="_blank">
+      <div class="mat-dot" style="background:var(--prog7311)"></div>
+      <div class="mat-info"><span class="mat-code">PROG7311</span><span class="mat-lecturer">Denzyl</span></div>
+      
+    </a>
+    <a class="mat-link" href="https://advtechonline.sharepoint.com/sites/TertiaryStudents/IIE%20Student%20Materials/Forms/Default%20View.aspx?id=%2Fsites%2FTertiaryStudents%2FIIE%20Student%20Materials%2FNew%20Student%20Materials%20CAT%2FIRIT7311%2F2026%2FTerm%201&amp;viewid=db15e059%2D4f93%2D487f%2Dabda%2De538b821c7b8" target="_blank">
+      <div class="mat-dot" style="background:var(--irit7311)"></div>
+      <div class="mat-info"><span class="mat-code">IRIT7311</span><span class="mat-lecturer">Zahra</span></div>
+      
+    </a>
+  </div>
+</div>
+
+<div class="footer-link">
+  <div class="fl-icon">📋</div>
+  Check <a href="https://advtechonline.sharepoint.com/sites/Emeris/PAS/Forms/AllItems.aspx?id=%2Fsites%2FEmeris%2FPAS%2F2026%2FFaculty%20of%20Science%20and%20Technology%2FSchool%20of%20Computer%20Science%2FBachelor%20of%20Computer%20and%20Information%20Science%20in%20Application%20Development%20BCAD0701&amp;viewid=7d0c106d%2D7867%2D4ac2%2D84a6%2D782f2662169a&csf=1&CID=562a2a70%2D2b3e%2D4286%2D9e0c%2D2c31241256e0&FolderCTID=0x012000ABD6003807C8E844B9951A17F1456534" target="_blank">here</a> for the latest PAS
+</div>
+
+<script>
+  function toggleTheme() {
+    const html = document.documentElement;
+    const current = html.getAttribute('data-theme');
+    const next = current === 'light' ? 'dark' : 'light';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('bcad-theme', next);
+  }
+
+  // Load saved preference
+  const saved = localStorage.getItem('bcad-theme');
+  if (saved) document.documentElement.setAttribute('data-theme', saved);
+
+  // Calendar horizontal scroll navigation
+  (function() {
+    const scroller = document.getElementById('calScroller');
+    const dotsContainer = document.getElementById('calDots');
+    const slides = scroller.querySelectorAll('.cal-slide');
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const START_MONTH = 0; // January
+
+    function getSlideWidth() {
+      return slides[0].offsetWidth + parseFloat(getComputedStyle(scroller).gap || 0);
+    }
+
+    function getActiveIdx() {
+      return Math.round(scroller.scrollLeft / getSlideWidth());
+    }
+
+    function getMonthIdx(month) {
+      return Math.max(0, Math.min(slides.length - 1, month - START_MONTH));
+    }
+
+    // Build dots
+    slides.forEach(function(_, i) {
+      var dot = document.createElement('div');
+      dot.className = 'cal-dot';
+      dot.title = monthNames[i];
+      dot.addEventListener('click', function() {
+        scroller.scrollTo({ left: i * getSlideWidth(), behavior: 'smooth' });
+      });
+      dotsContainer.appendChild(dot);
+    });
+
+    var dots = dotsContainer.querySelectorAll('.cal-dot');
+
+    // Debounced dot updater
+    var scrollRaf = 0;
+    function updateDots() {
+      cancelAnimationFrame(scrollRaf);
+      scrollRaf = requestAnimationFrame(function() {
+        var idx = getActiveIdx();
+        dots.forEach(function(d, i) { d.classList.toggle('active', i === idx); });
+      });
+    }
+
+    scroller.addEventListener('scroll', updateDots, { passive: true });
+
+    // Arrow navigation
+    window.scrollCal = function(dir) {
+      scroller.scrollBy({ left: dir * getSlideWidth(), behavior: 'smooth' });
+    };
+
+    // Scroll to current month on load
+    var targetIdx = getMonthIdx(new Date().getMonth());
+    setTimeout(function() {
+      scroller.scrollLeft = targetIdx * getSlideWidth();
+      updateDots();
+    }, 100);
+
+    // Mark today's date
+    function markToday() {
+      document.querySelectorAll('.cal-day.today').forEach(function(el) {
+        el.classList.remove('today');
+      });
+
+      var today = new Date();
+      var month = today.getMonth();
+      var day = today.getDate();
+
+      var cal = scroller.querySelector('.cal[data-month="' + month + '"]');
+      if (!cal) return;
+
+      cal.querySelectorAll('.cal-day:not(.empty)').forEach(function(cell) {
+        if (parseInt(cell.childNodes[0].textContent, 10) === day) {
+          cell.classList.add('today');
+        }
+      });
+    }
+
+    markToday();
+
+    // Grey out past days and events
+    function markPast() {
+      var today = new Date();
+      today.setHours(0, 0, 0, 0);
+      var todayMonth = today.getMonth();
+      var todayDate = today.getDate();
+
+      // Calendar days
+      scroller.querySelectorAll('.cal').forEach(function(cal) {
+        var month = parseInt(cal.getAttribute('data-month'), 10);
+        cal.querySelectorAll('.cal-day:not(.empty)').forEach(function(cell) {
+          var day = parseInt(cell.childNodes[0].textContent, 10);
+          if (month < todayMonth || (month === todayMonth && day < todayDate)) {
+            cell.classList.add('past');
+          } else {
+            cell.classList.remove('past');
+          }
+        });
+      });
+
+      // Event rows
+      document.querySelectorAll('.ev-row[data-date]').forEach(function(row) {
+        var d = new Date(row.getAttribute('data-date') + 'T00:00:00');
+        if (d < today) {
+          row.classList.add('past');
+        } else {
+          row.classList.remove('past');
+        }
+      });
+
+      // Month group labels — grey out if ALL sibling ev-rows until next label are past
+      document.querySelectorAll('.month-group-label[data-month]').forEach(function(label) {
+        var next = label.nextElementSibling;
+        var allPast = true;
+        var hasRows = false;
+        while (next && !next.classList.contains('month-group-label')) {
+          if (next.classList.contains('ev-row')) {
+            hasRows = true;
+            if (!next.classList.contains('past')) { allPast = false; break; }
+          }
+          next = next.nextElementSibling;
+        }
+        if (hasRows && allPast) {
+          label.classList.add('past');
+        } else {
+          label.classList.remove('past');
+        }
+      });
+    }
+
+    markPast();
+
+    // Schedule update at midnight
+    function scheduleNextMidnight() {
+      var now = new Date();
+      var midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+      setTimeout(function() {
+        markToday();
+        markPast();
+        var newIdx = getMonthIdx(new Date().getMonth());
+        if (newIdx !== getActiveIdx()) {
+          scroller.scrollTo({ left: newIdx * getSlideWidth(), behavior: 'smooth' });
+        }
+        scheduleNextMidnight();
+      }, midnight - now + 500);
+    }
+    scheduleNextMidnight();
+  })();
+</script>
+
+</body>
+</html>
