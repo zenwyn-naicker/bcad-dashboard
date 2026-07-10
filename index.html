@@ -3,2020 +3,1379 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="BCAD Year 3 PAS and Semester 2 timetable dashboard.">
+<meta name="color-scheme" content="light dark">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <title>BCAD Year 3 Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-  /* ── Light Theme (default) ── */
-  :root, [data-theme="light"] {
-    --accent-blue: #0EA5E9;
-    --accent-green: #22C55E;
-    --accent-orange: #F97316;
-    --accent-purple: #8B5CF6;
-    --accent-purple-bg: #F5F3FF;
+/* =========================================================
+   BCAD YEAR 3 DASHBOARD
+   Single-file component styles, ordered from shared to specific.
+   ========================================================= */
 
-    --bg: #F8FAFC;
-    --surface: #FFFFFF;
-    --surface-alt: #F9FAFB;
-    --border: #E2E8F0;
-    --border-light: #F1F5F9;
-    --text: #111827;
-    --text-secondary: #374151;
-    --text-dim: #6B7280;
-    --hover-bg: #FAFBFC;
-    --tag-bg: #F1F5F9;
-    --shadow: 0 1px 3px rgba(0,0,0,0.04);
-    --tooltip-bg: #111827;
-    --tooltip-text: #FFFFFF;
-    --toggle-bg: #E2E8F0;
-    --toggle-knob: #FFFFFF;
-    --toggle-icon-sun: #F59E0B;
-    --toggle-icon-moon: #6B7280;
+/* ---------- Design tokens ---------- */
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+
+  --dashboard-content-width: 1150px;
+  --accent-blue: #0ea5e9;
+  --accent-blue-soft: #eff6ff;
+  --today-blue: #38bdf8;
+  --ui-accent: #111827;
+  --ui-accent-contrast: #ffffff;
+  --ui-accent-soft: #eef2f7;
+  --accent-green: #22c55e;
+  --accent-orange: #f97316;
+  --accent-purple: #8b5cf6;
+  --accent-purple-bg: #f5f3ff;
+
+  --bg: #f4f7fb;
+  --surface: #ffffff;
+  --surface-alt: #f8fafc;
+  --border: #e5eaf1;
+  --border-light: #eef2f7;
+  --border-strong: #d6dde8;
+  --text: #172033;
+  --text-secondary: #41506a;
+  --text-dim: #718096;
+  --hover-bg: #f7f9fc;
+  --tag-bg: #eef2f7;
+  --shadow: 0 1px 2px rgb(15 23 42 / 4%), 0 8px 24px rgb(15 23 42 / 4%);
+  --shadow-raised: 0 12px 32px rgb(15 23 42 / 9%);
+  --radius-card: 18px;
+  --radius-control: 12px;
+  --tooltip-bg: #111827;
+  --tooltip-text: #ffffff;
+  --focus-ring: rgb(17 24 39 / 22%);
+
+  --insy7314: #06b6d4;
+  --insy7314-bg: #cffafe;
+  --insy7314-text: #155e75;
+  --insy7314-border: #67e8f9;
+  --insy7315: #8b5cf6;
+  --insy7315-bg: #ede9fe;
+  --insy7315-text: #5b21b6;
+  --insy7315-border: #c4b5fd;
+  --prog7312: #ec4899;
+  --prog7312-bg: #fce7f3;
+  --prog7312-text: #9d174d;
+  --prog7312-border: #f9a8d4;
+  --prog7314: #f97316;
+  --prog7314-bg: #ffedd5;
+  --prog7314-text: #9a3412;
+  --prog7314-border: #fdba74;
+  --tt-line: #eef2f7;
+  --tt-muted-bg: #f8fafc;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --accent-blue: #38bdf8;
+  --accent-blue-soft: rgb(59 130 246 / 14%);
+  --ui-accent: #f1f5f9;
+  --ui-accent-contrast: #0b1220;
+  --ui-accent-soft: rgb(241 245 249 / 11%);
+  --accent-green: #4ade80;
+  --accent-orange: #fb923c;
+  --accent-purple: #a78bfa;
+  --accent-purple-bg: rgb(167 139 250 / 10%);
+
+  --bg: #0b1220;
+  --surface: #121d2f;
+  --surface-alt: #172338;
+  --border: #29374d;
+  --border-light: rgb(255 255 255 / 7%);
+  --border-strong: #3a4a63;
+  --text: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-dim: #94a3b8;
+  --hover-bg: rgb(255 255 255 / 4%);
+  --tag-bg: rgb(255 255 255 / 8%);
+  --shadow: 0 1px 2px rgb(0 0 0 / 18%), 0 10px 28px rgb(0 0 0 / 15%);
+  --shadow-raised: 0 14px 34px rgb(0 0 0 / 28%);
+  --tooltip-bg: #f1f5f9;
+  --tooltip-text: #0f172a;
+  --focus-ring: rgb(241 245 249 / 24%);
+
+  --insy7314: #22d3ee;
+  --insy7314-bg: rgb(6 182 212 / 16%);
+  --insy7314-text: #a5f3fc;
+  --insy7314-border: rgb(103 232 249 / 42%);
+  --insy7315: #a78bfa;
+  --insy7315-bg: rgb(139 92 246 / 18%);
+  --insy7315-text: #ddd6fe;
+  --insy7315-border: rgb(196 181 253 / 42%);
+  --prog7312: #f472b6;
+  --prog7312-bg: rgb(236 72 153 / 16%);
+  --prog7312-text: #fbcfe8;
+  --prog7312-border: rgb(249 168 212 / 42%);
+  --prog7314: #fb923c;
+  --prog7314-bg: rgb(249 115 22 / 18%);
+  --prog7314-text: #fed7aa;
+  --prog7314-border: rgb(253 186 116 / 42%);
+  --tt-line: rgb(255 255 255 / 6%);
+  --tt-muted-bg: rgb(255 255 255 / 3%);
+}
+
+/* ---------- Reset and shared behaviour ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scrollbar-gutter: stable;
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Outfit", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  padding: clamp(1rem, 2vw, 1.75rem);
+  transition: background-color 180ms ease, color 180ms ease;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  font: inherit;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.header,
+.dashboard-tabs,
+.dashboard-shell,
+.pas-calendar-zone,
+.pas-lower-grid,
+.pas-footer,
+.timetable-shell {
+  width: 100%;
+  max-width: var(--dashboard-content-width);
+  margin-inline: auto;
+}
+
+/* ---------- Header and theme toggle ---------- */
+.header {
+  margin-bottom: 0.9rem;
+}
+
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.header-left h1 {
+  color: var(--text);
+  font-size: clamp(1.45rem, 2.3vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.theme-toggle {
+  position: relative;
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  color: var(--text);
+  cursor: pointer;
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.theme-toggle:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-raised);
+  transform: translateY(-1px);
+}
+
+.theme-toggle:active {
+  transform: translateY(0);
+}
+
+.toggle-knob {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  transition: none;
+}
+
+[data-theme="dark"] .theme-toggle {
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+[data-theme="dark"] .toggle-knob {
+  transform: none;
+  background: transparent;
+  box-shadow: none;
+}
+
+.icon-sun,
+.icon-moon {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  transition: opacity 180ms ease;
+}
+
+.icon-sun {
+  color: #f59e0b;
+  opacity: 1;
+}
+
+.icon-moon {
+  color: #c4b5fd;
+  opacity: 0;
+}
+
+[data-theme="dark"] .icon-sun { opacity: 0; }
+[data-theme="dark"] .icon-moon { opacity: 1; }
+
+/* ---------- Dashboard tabs ---------- */
+.dashboard-tabs {
+  display: flex;
+  width: min(310px, 100%);
+  gap: 0.25rem;
+  margin-bottom: 1rem;
+  padding: 0.25rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: 0 1px 2px rgb(15 23 42 / 4%);
+}
+
+.tab-btn {
+  flex: 1;
+  min-height: 38px;
+  padding: 0.55rem 1rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  transition: background-color 180ms ease, color 180ms ease;
+}
+
+.tab-btn:hover {
+  background: var(--hover-bg);
+  color: var(--text);
+}
+
+.tab-btn.active {
+  background: var(--ui-accent);
+  box-shadow: 0 4px 12px rgb(15 23 42 / 14%);
+  color: var(--ui-accent-contrast);
+}
+
+[data-theme="dark"] .tab-btn.active {
+  background: var(--ui-accent);
+  color: var(--ui-accent-contrast);
+}
+
+.tab-panel:not(.active) {
+  display: none;
+}
+
+/* ---------- Carousel controls ---------- */
+.calendars-wrapper,
+.tt-card-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.cal-nav,
+.tt-page-nav {
+  position: absolute;
+  top: 50%;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  transform: translateY(-50%);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 0 4px 14px rgb(15 23 42 / 10%);
+  cursor: pointer;
+  font-size: 1.25rem;
+  font-weight: 900;
+  line-height: 1;
+  transition: background-color 150ms ease, border-color 150ms ease, box-shadow 150ms ease, opacity 150ms ease, transform 150ms ease;
+}
+
+.cal-nav:hover,
+.tt-page-nav:hover {
+  border-color: var(--border-strong);
+  background: var(--hover-bg);
+  box-shadow: 0 7px 18px rgb(15 23 42 / 14%);
+  transform: translateY(-50%) scale(1.04);
+}
+
+.cal-nav:disabled,
+.tt-page-nav:disabled {
+  opacity: 0.48;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.cal-nav-prev,
+.tt-page-nav-prev { left: -20px; }
+
+.cal-nav-next,
+.tt-page-nav-next { right: -20px; }
+
+/* ---------- PAS calendar ---------- */
+.pas-dashboard {
+  display: block;
+}
+
+.pas-calendar-zone {
+  margin-bottom: 1rem;
+}
+
+.calendars-wrapper {
+  padding: 0;
+}
+
+.calendars {
+  display: flex;
+  gap: 1rem;
+  padding-bottom: 0.25rem;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.calendars::-webkit-scrollbar,
+.tt-week-scroller::-webkit-scrollbar {
+  display: none;
+}
+
+.cal-slide {
+  display: flex;
+  flex: 0 0 calc((100% - 2rem) / 3);
+  min-width: calc((100% - 2rem) / 3);
+  scroll-snap-align: start;
+}
+
+.cal {
+  width: 100%;
+  padding: 1.1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.cal-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.18rem;
+  min-height: 24px;
+  margin-top: 0.55rem;
+}
+
+.cal-dot {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+}
+
+.cal-dot::before {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--border-strong);
+  content: "";
+  opacity: 0.65;
+  transition: background-color 150ms ease, opacity 150ms ease, transform 150ms ease;
+}
+
+.cal-dot:hover::before {
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+.cal-dot.active::before {
+  background: var(--ui-accent);
+  opacity: 1;
+  transform: scale(1.25);
+}
+
+.cal-title {
+  margin-bottom: 0.85rem;
+  padding-left: 0.1rem;
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.cal-title span {
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.3rem;
+}
+
+.cal-dow {
+  padding-bottom: 0.45rem;
+  color: var(--text-dim);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.cal-day {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  border-radius: 10px;
+  color: var(--text);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.cal-day.empty {
+  visibility: hidden;
+}
+
+.cal-day.today {
+  z-index: 1;
+  border-radius: 50%;
+  background: var(--today-blue);
+  box-shadow: 0 0 0 3px var(--accent-blue-soft);
+  color: #07111f;
+  font-weight: 800;
+}
+
+.cal-day.today::before {
+  display: none;
+}
+
+[data-theme="dark"] .cal-day.today {
+  color: #07111f;
+}
+
+.cal-day.has-event {
+  border: 2px solid color-mix(in srgb, var(--event-color, var(--accent-blue)) 62%, #0f172a);
+  border-radius: 10px;
+  background: var(--event-bg, var(--accent-blue-soft));
+  box-shadow: 0 2px 5px rgb(15 23 42 / 7%);
+  color: var(--event-text, var(--text));
+  cursor: help;
+  font-weight: 700;
+}
+
+.cal-day.has-event.today {
+  border-color: color-mix(in srgb, var(--event-color, var(--accent-blue)) 62%, #0f172a);
+  background: var(--today-blue);
+  box-shadow: 0 0 0 3px var(--accent-blue-soft);
+  color: #07111f;
+}
+
+[data-theme="dark"] .cal-day.has-event.today {
+  color: #07111f;
+}
+
+[data-theme="dark"] .cal-day.has-event {
+  border-color: var(--event-color, var(--accent-blue));
+  box-shadow: 0 2px 6px rgb(0 0 0 / 22%);
+}
+
+[data-theme="dark"] .cal-day.has-event.today {
+  box-shadow: 0 0 0 3px var(--accent-blue-soft);
+}
+.cal-day.event-INSY7314 { --event-color: var(--insy7314); --event-bg: var(--insy7314-bg); --event-text: var(--insy7314-text); }
+.cal-day.event-INSY7315 { --event-color: var(--insy7315); --event-bg: var(--insy7315-bg); --event-text: var(--insy7315-text); }
+.cal-day.event-PROG7312 { --event-color: var(--prog7312); --event-bg: var(--prog7312-bg); --event-text: var(--prog7312-text); }
+.cal-day.event-PROG7314 { --event-color: var(--prog7314); --event-bg: var(--prog7314-bg); --event-text: var(--prog7314-text); }
+.cal-day.e-accent-blue { --event-color: var(--accent-blue); --event-bg: var(--accent-blue-soft); --event-text: var(--text); }
+.cal-day.e-accent-green { --event-color: var(--accent-green); --event-bg: rgb(34 197 94 / 14%); --event-text: var(--text); }
+.cal-day.e-accent-orange { --event-color: var(--accent-orange); --event-bg: rgb(249 115 22 / 14%); --event-text: var(--text); }
+.cal-day.e-accent-purple { --event-color: var(--accent-purple); --event-bg: rgb(139 92 246 / 14%); --event-text: var(--text); }
+
+.cal-day.past { opacity: 0.6; }
+.cal-day.has-event.past {
+  filter: grayscale(0.5);
+  opacity: 0.62;
+}
+
+.cal-day.has-event .tip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  z-index: 10;
+  display: none;
+  padding: 0.35rem 0.6rem;
+  border-radius: 7px;
+  background: var(--tooltip-bg);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
+  color: var(--tooltip-text);
+  font-size: 0.68rem;
+  font-weight: 600;
+  pointer-events: none;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.cal-day.has-event .tip::after {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  border: 5px solid transparent;
+  border-top-color: var(--tooltip-bg);
+  content: "";
+  transform: translateX(-50%);
+}
+
+.cal-day.has-event:hover .tip,
+.cal-day.has-event:focus-within .tip {
+  display: block;
+}
+
+.tip-lecturer {
+  color: rgb(255 255 255 / 55%);
+  font-weight: 500;
+}
+
+[data-theme="dark"] .tip-lecturer {
+  color: rgb(15 23 42 / 55%);
+}
+
+/* ---------- PAS materials and links ---------- */
+.pas-lower-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.materials-section {
+  width: 100%;
+  margin-top: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.materials-header {
+  padding: 1rem 1.2rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  font-size: 0.92rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.materials-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.65rem;
+  padding: 0.9rem;
+}
+
+.mat-link {
+  display: grid;
+  grid-template-columns: 10px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.6rem;
+  min-width: 0;
+  min-height: 66px;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  background: var(--surface-alt);
+  color: var(--text);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 150ms ease, border-color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
+}
+
+.mat-link:hover {
+  border-color: var(--border-strong);
+  background: var(--surface);
+  box-shadow: 0 7px 18px rgb(15 23 42 / 7%);
+  transform: translateY(-1px);
+}
+
+.mat-link:active {
+  box-shadow: none;
+  transform: translateY(0);
+}
+
+.mat-dot {
+  flex: 0 0 auto;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.mat-link::after {
+  color: var(--text-dim);
+  content: "↗";
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.mat-link:hover::after {
+  color: var(--ui-accent);
+}
+
+.mat-info {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.mat-code {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.mat-lecturer {
+  overflow: hidden;
+  color: var(--text-dim);
+  font-size: 0.74rem;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.footer-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  color: var(--text);
+  font-size: 0.92rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: border-color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
+}
+
+.footer-link:hover {
+  border-color: var(--ui-accent);
+  box-shadow: var(--shadow-raised);
+  transform: translateY(-1px);
+}
+
+.fl-icon {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  background: var(--ui-accent-soft);
+  color: var(--ui-accent);
+  font-size: 1rem;
+}
+
+.footer-copy {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.footer-copy strong {
+  color: var(--text);
+  font-size: 0.88rem;
+}
+
+.footer-copy span {
+  margin-top: 0.05rem;
+  color: var(--text-dim);
+  font-size: 0.75rem;
+}
+
+.footer-arrow {
+  color: var(--text-dim);
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.footer-link:hover .footer-arrow {
+  color: var(--ui-accent);
+}
+
+/* ---------- Timetable carousel ---------- */
+.timetable-shell {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0;
+}
+
+.tt-card-head {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  min-height: 32px;
+  margin-bottom: 0.65rem;
+  padding-inline: 0.15rem;
+}
+
+.tt-week-title {
+  overflow: hidden;
+  color: var(--text);
+  font-size: clamp(1.05rem, 1.45vw, 1.28rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tt-card-wrap {
+  touch-action: pan-y pinch-zoom;
+  overflow: visible;
+}
+
+.tt-week-scroller {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow);
+  overscroll-behavior-x: contain;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.tt-week-slide {
+  flex: 0 0 100%;
+  min-width: 100%;
+  height: 100%;
+  min-height: 0;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+}
+
+.tt-card {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  flex-direction: column;
+  padding: clamp(0.7rem, 0.9vw, 0.9rem);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  box-shadow: none;
+}
+
+.tt-grid {
+  display: grid;
+  flex: 1 1 auto;
+  grid-template-columns: 66px repeat(5, minmax(0, 1fr));
+  grid-template-rows: 44px repeat(9, minmax(38px, 1fr));
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  background: var(--surface);
+}
+
+.tt-time-head,
+.tt-day-head,
+.tt-time-cell,
+.tt-bg-cell {
+  border-right: 1px solid var(--tt-line);
+  border-bottom: 1px solid var(--tt-line);
+}
+
+.tt-time-head,
+.tt-day-head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-alt);
+  text-align: center;
+}
+
+.tt-day-head.today-column {
+  background: var(--ui-accent-soft);
+}
+
+.tt-time-head {
+  color: var(--text-dim);
+  font-size: clamp(0.66rem, 0.76vw, 0.78rem);
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.tt-day-date {
+  color: var(--text-dim);
+  font-size: clamp(0.66rem, 0.76vw, 0.78rem);
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.tt-day-name {
+  margin-top: 0.05rem;
+  color: var(--text);
+  font-size: clamp(0.82rem, 0.95vw, 0.96rem);
+  font-weight: 900;
+  line-height: 1.05;
+}
+
+.tt-time-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  color: var(--text-secondary);
+  font-size: clamp(0.78rem, 0.9vw, 0.92rem);
+  font-weight: 900;
+}
+
+.tt-bg-cell { background: var(--surface); }
+.tt-bg-cell.lunch { background: var(--tt-muted-bg); }
+.tt-bg-cell.today-column { background: var(--ui-accent-soft); }
+.tt-bg-cell.today-column.lunch { background: var(--ui-accent-soft); }
+
+.tt-lunch-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-dim);
+  font-size: clamp(0.64rem, 0.74vw, 0.72rem);
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  opacity: 0.45;
+  text-transform: uppercase;
+}
+
+.tt-item {
+  z-index: 1;
+  padding: clamp(0.26rem, 0.34vw, 0.36rem);
+}
+
+.tt-item.today-column .tt-session,
+.tt-item.today-column .tt-event {
+  box-shadow: 0 0 0 1px var(--ui-accent);
+}
+
+.tt-session,
+.tt-event {
+  height: 100%;
+  overflow: hidden;
+  border: 1.5px solid var(--tt-border);
+  border-radius: 10px;
+  background: var(--tt-bg);
+  color: var(--tt-text);
+}
+
+.tt-session {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(0.42rem, 0.5vw, 0.56rem) clamp(0.46rem, 0.55vw, 0.64rem);
+}
+
+.tt-session::after {
+  position: absolute;
+  top: 0.35rem;
+  right: 0.35rem;
+  bottom: 0.35rem;
+  width: 4px;
+  border-radius: 999px;
+  background: var(--tt-color);
+  content: "";
+}
+
+.tt-code {
+  padding-right: 0.7rem;
+  font-size: clamp(0.88rem, 1vw, 1.02rem);
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+}
+
+.tt-module {
+  display: -webkit-box;
+  margin-top: 0.06rem;
+  padding-right: 0.8rem;
+  overflow: hidden;
+  font-size: clamp(0.66rem, 0.75vw, 0.78rem);
+  font-weight: 700;
+  line-height: 1.18;
+  opacity: 0.9;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.tt-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.28rem;
+  margin-top: auto;
+  padding-right: 0.65rem;
+}
+
+.tt-meta span {
+  padding: 0.18rem 0.36rem;
+  border-radius: 6px;
+  background: rgb(255 255 255 / 50%);
+  font-size: clamp(0.62rem, 0.7vw, 0.72rem);
+  font-weight: 900;
+  line-height: 1;
+}
+
+[data-theme="dark"] .tt-meta span {
+  background: rgb(255 255 255 / 8%);
+}
+
+.tt-event {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem;
+  border-style: dashed;
+  font-size: clamp(0.8rem, 0.95vw, 0.95rem);
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  line-height: 1.2;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.tt-event.assessment { --tt-bg: #fef3c7; --tt-text: #92400e; --tt-border: #f59e0b; }
+.tt-event.catchup { --tt-bg: #f1f5f9; --tt-text: #475569; --tt-border: #cbd5e1; }
+.tt-event.poe { --tt-bg: #dcfce7; --tt-text: #166534; --tt-border: #86efac; }
+.tt-event.break { --tt-bg: #ffe4e6; --tt-text: #be123c; --tt-border: #fda4af; }
+.tt-event.holiday { --tt-bg: #fee2e2; --tt-text: #b91c1c; --tt-border: #fca5a5; }
+
+[data-theme="dark"] .tt-event.assessment { --tt-bg: rgb(245 158 11 / 14%); --tt-text: #fde68a; --tt-border: rgb(245 158 11 / 38%); }
+[data-theme="dark"] .tt-event.catchup { --tt-bg: rgb(148 163 184 / 12%); --tt-text: #cbd5e1; --tt-border: rgb(148 163 184 / 30%); }
+[data-theme="dark"] .tt-event.poe { --tt-bg: rgb(34 197 94 / 14%); --tt-text: #bbf7d0; --tt-border: rgb(134 239 172 / 35%); }
+[data-theme="dark"] .tt-event.break { --tt-bg: rgb(244 63 94 / 14%); --tt-text: #fecdd3; --tt-border: rgb(253 164 175 / 35%); }
+[data-theme="dark"] .tt-event.holiday { --tt-bg: rgb(239 68 68 / 14%); --tt-text: #fecaca; --tt-border: rgb(252 165 165 / 35%); }
+
+.mod-INSY7314 { --tt-color: var(--insy7314); --tt-bg: var(--insy7314-bg); --tt-text: var(--insy7314-text); --tt-border: var(--insy7314-border); }
+.mod-INSY7315 { --tt-color: var(--insy7315); --tt-bg: var(--insy7315-bg); --tt-text: var(--insy7315-text); --tt-border: var(--insy7315-border); }
+.mod-PROG7312 { --tt-color: var(--prog7312); --tt-bg: var(--prog7312-bg); --tt-text: var(--prog7312-text); --tt-border: var(--prog7312-border); }
+.mod-PROG7314 { --tt-color: var(--prog7314); --tt-bg: var(--prog7314-bg); --tt-text: var(--prog7314-text); --tt-border: var(--prog7314-border); }
+
+.tt-mobile {
+  display: none;
+}
+
+.tt-empty {
+  padding: 1rem;
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+  background: var(--surface-alt);
+  color: var(--text-dim);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+/* ---------- Desktop sizing ---------- */
+@media (min-width: 901px) {
+  #panel-pas.active,
+  #panel-timetable.active {
+    height: min(720px, var(--dashboard-panel-height, calc(100dvh - 7.2rem)));
+    min-height: 0;
   }
 
-  /* ── Dark Theme ── */
-  [data-theme="dark"] {
-    --accent-blue: #38BDF8;
-    --accent-green: #4ADE80;
-    --accent-orange: #FB923C;
-    --accent-purple: #A78BFA;
-    --accent-purple-bg: rgba(167,139,250,0.1);
-
-    --bg: #0F172A;
-    --surface: #1E293B;
-    --surface-alt: #1A2332;
-    --border: #334155;
-    --border-light: rgba(255,255,255,0.06);
-    --text: #F1F5F9;
-    --text-secondary: #CBD5E1;
-    --text-dim: #94A3B8;
-    --hover-bg: rgba(255,255,255,0.04);
-    --tag-bg: rgba(255,255,255,0.08);
-    --shadow: 0 1px 3px rgba(0,0,0,0.2);
-    --tooltip-bg: #F1F5F9;
-    --tooltip-text: #0F172A;
-    --toggle-bg: #334155;
-    --toggle-knob: #0F172A;
-    --toggle-icon-sun: #475569;
-    --toggle-icon-moon: #A78BFA;
+  .pas-dashboard {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto auto;
+    height: 100%;
+    min-height: 0;
+    gap: 0.75rem;
   }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    font-family: 'Outfit', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    padding: clamp(0.75rem, 1.35vw, 1.35rem);
-    min-height: 100vh;
-    min-height: 100dvh;
-    overflow-x: hidden;
-    transition: background 0.3s ease, color 0.3s ease;
+  .pas-calendar-zone {
+    display: flex;
+    min-height: 0;
+    flex-direction: column;
+    margin-bottom: 0;
   }
 
-  /* ── Header ── */
-  .header {
-    margin: 0 auto clamp(0.45rem, 0.8vw, 0.65rem);
-    max-width: min(1600px, 100%);
+  .calendars-wrapper,
+  .calendars,
+  .cal-slide,
+  .cal {
+    min-height: 0;
+  }
+
+  .calendars-wrapper,
+  .calendars,
+  .cal-slide {
+    height: 100%;
+  }
+
+  .cal {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-  }
-  .header-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-  }
-  .header-left h1 {
-    font-size: clamp(1.2rem, 1.8vw, 1.55rem);
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    color: var(--text);
-  }
-  .header-left .sub {
-    font-size: clamp(0.68rem, 0.9vw, 0.78rem);
-    color: var(--text-dim);
-    font-weight: 600;
-    margin-top: 0.1rem;
-  }
-  .legend {
-    display: flex;
-    gap: 0.45rem;
-    flex-wrap: nowrap;
-  }
-  .legend-chip {
-    display: flex;
-    align-items: center;
-    gap: 0.35rem;
-    font-size: 0.68rem;
-    font-weight: 600;
-    padding: 0.3rem 0.65rem;
-    border-radius: 7px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    color: var(--text-secondary);
-    box-shadow: var(--shadow);
-    transition: all 0.3s ease;
-  }
-  .legend-chip .dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    transition: background 0.3s ease;
-  }
-
-  /* ── Theme Toggle ── */
-  .theme-toggle {
-    position: relative;
-    width: 78px;
-    height: 42px;
-    border-radius: 999px;
-    background: linear-gradient(180deg, var(--surface) 0%, var(--surface-alt) 100%);
-    border: 1.5px solid var(--border);
-    cursor: pointer;
-    transition: transform 0.2s ease, border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
-    flex-shrink: 0;
-    display: inline-flex;
-    align-items: center;
-    padding: 0 5px;
-    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
-    -webkit-tap-highlight-color: transparent;
-  }
-  .theme-toggle:hover {
-    border-color: rgba(14, 165, 233, 0.55);
-    box-shadow: 0 8px 22px rgba(15, 23, 42, 0.12);
-    transform: translateY(-1px);
-  }
-  .theme-toggle:active {
-    transform: translateY(0);
-    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
-  }
-  .theme-toggle:focus-visible {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.18), 0 8px 22px rgba(15, 23, 42, 0.12);
-  }
-  .theme-toggle .toggle-knob {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
-    border: 1px solid rgba(255,255,255,0.9);
-    box-shadow: 0 3px 10px rgba(15, 23, 42, 0.18);
-    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1), background 0.25s ease, box-shadow 0.25s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    z-index: 2;
-  }
-  [data-theme="dark"] .theme-toggle {
-    background: linear-gradient(180deg, #1E293B 0%, #0F172A 100%);
-    box-shadow: 0 6px 18px rgba(0,0,0,0.28);
-  }
-  [data-theme="dark"] .theme-toggle .toggle-knob {
-    transform: translateX(36px);
-    background: linear-gradient(180deg, #1E293B 0%, #0F172A 100%);
-    border-color: rgba(255,255,255,0.08);
-    box-shadow: 0 3px 10px rgba(0,0,0,0.35);
-  }
-  .theme-toggle .icon-sun,
-  .theme-toggle .icon-moon {
-    position: absolute;
-    width: 16px;
-    height: 16px;
-    transition: opacity 0.24s ease, color 0.24s ease;
-  }
-  .theme-toggle .icon-sun {
-    color: var(--toggle-icon-sun);
-    opacity: 1;
-  }
-  .theme-toggle .icon-moon {
-    color: #C4B5FD;
-    opacity: 0;
-  }
-  [data-theme="dark"] .theme-toggle .icon-sun { opacity: 0; }
-  [data-theme="dark"] .theme-toggle .icon-moon { opacity: 1; }
-
-  /* Sun / Moon backgrounds in toggle track */
-  .theme-toggle .track-icons {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 9px;
-    pointer-events: none;
-    z-index: 1;
-  }
-  .track-icons .track-sun,
-  .track-icons .track-moon {
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.85rem;
-    line-height: 1;
-    transition: opacity 0.24s ease, background 0.24s ease, transform 0.24s ease;
-  }
-  .track-icons .track-sun {
-    opacity: 0.55;
-    background: rgba(245, 158, 11, 0.10);
-  }
-  .track-icons .track-moon {
-    opacity: 0.6;
-    background: rgba(139, 92, 246, 0.10);
-  }
-  [data-theme="dark"] .track-icons .track-sun {
-    opacity: 0.35;
-    transform: scale(0.96);
-  }
-  [data-theme="dark"] .track-icons .track-moon {
-    opacity: 0.95;
-    background: rgba(167, 139, 250, 0.18);
-    transform: scale(1.02);
-  }
-
-  /* ── Calendar Grid ── */
-  .calendars-wrapper {
-    position: relative;
-    max-width: min(1600px, 100%);
-    margin: 0 auto;
-  }
-  .calendars {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
-    gap: clamp(0.55rem, 1vw, 0.9rem);
-    padding-bottom: 0.4rem;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-  .calendars::-webkit-scrollbar { display: none; }
-  .cal-nav {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 2;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border: 1.5px solid var(--border);
-    background: var(--surface);
-    color: var(--text);
-    font-size: 1.3rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    transition: all 0.15s;
-    line-height: 1;
-  }
-  .cal-nav:hover { background: var(--hover-bg); border-color: var(--text-dim); }
-  .cal-nav-prev { left: -18px; }
-  .cal-nav-next { right: -18px; }
-  .cal-dots {
-    display: flex;
-    justify-content: center;
-    gap: 0.4rem;
-    margin-top: 0.75rem;
-  }
-  .cal-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--border);
-    transition: all 0.2s;
-    cursor: pointer;
-  }
-  .cal-dot.active {
-    background: var(--text);
-    transform: scale(1.2);
-  }
-  .cal-dot:hover { background: var(--text-dim); }
-  .cal {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: clamp(0.75rem, 1vw, 1.1rem);
-    box-shadow: var(--shadow);
-    transition: all 0.3s ease;
-  }
-  .cal-slide {
-    min-width: calc((100% - 2rem) / 3);
-    flex: 0 0 calc((100% - 2rem) / 3);
-    display: flex;
-    justify-content: center;
-    scroll-snap-align: start;
-    box-sizing: border-box;
-  }
-  .cal-slide .cal {
-    width: 100%;
-  }
-  .cal-title {
-    font-size: clamp(0.85rem, 1vw, 1rem);
-    font-weight: 700;
-    margin-bottom: 0.55rem;
-    padding-left: 0.1rem;
-    color: var(--text);
-  }
-  .cal-title span {
-    font-weight: 500;
-    color: var(--text-dim);
-    font-size: 0.85rem;
   }
 
   .cal-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: clamp(0.18rem, 0.35vw, 0.3rem);
-  }
-  .cal-dow {
-    text-align: center;
-    font-size: 0.6rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--text);
-    padding-bottom: 0.4rem;
-    transition: color 0.3s ease;
+    flex: 1 1 auto;
   }
 
-  .cal-day {
-    position: relative;
-    aspect-ratio: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 10px;
-    font-size: 0.78rem;
-    font-weight: 500;
-    color: var(--text);
-    transition: all 0.15s;
-  }
-  .cal-day.empty { visibility: hidden; }
-  .cal-day.today {
-    font-weight: 800;
-  }
-  .cal-day.today::before {
-    content: '';
-    position: absolute;
-    inset: 4px;
-    border: 2.5px solid var(--accent-blue);
-    border-radius: 50%;
-    z-index: 0;
-  }
-  .cal-day.has-event.today::before {
-    border-color: #fff;
+  .cal-dots {
+    min-height: 20px;
+    margin-top: 0.3rem;
   }
 
-  .cal-day.has-event {
-    font-weight: 700;
-    cursor: default;
-    border-radius: 10px;
-    color: #fff;
-  }
-
-  .cal-day.e-accent-blue { background: var(--accent-blue); }
-  .cal-day.e-accent-green { background: var(--accent-green); }
-  .cal-day.e-accent-orange { background: var(--accent-orange); }
-  .cal-day.e-accent-purple { background: var(--accent-purple); }
-
-  /* Tooltip */
-  .cal-day.has-event .tip {
-    display: none;
-    position: absolute;
-    bottom: calc(100% + 6px);
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--tooltip-bg);
-    color: var(--tooltip-text);
-    font-size: 0.65rem;
-    font-weight: 600;
-    padding: 0.35rem 0.6rem;
-    border-radius: 7px;
-    white-space: nowrap;
-    z-index: 10;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    pointer-events: none;
-    transition: background 0.3s ease;
-  }
-  .cal-day.has-event .tip::after {
-    content: '';
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    border: 5px solid transparent;
-    border-top-color: var(--tooltip-bg);
-    transition: border-color 0.3s ease;
-  }
-  .cal-day.has-event:hover .tip { display: block; }
-  .tip-lecturer {
-    color: rgba(255,255,255,0.55);
-    font-weight: 500;
-  }
-  [data-theme="dark"] .tip-lecturer {
-    color: rgba(15,23,42,0.55);
-  }
-
-  /* ── Past Days & Events ── */
-  .cal-day.past { opacity: 0.3; }
-  .cal-day.has-event.past { opacity: 0.35; filter: grayscale(0.5); }
-
-  .ev-row.past {
-    opacity: 0.4;
-  }
-  .month-group-label.past { opacity: 0.4; }
-
-  /* ── Event List ── */
-  .event-list {
-    margin: 1.25rem auto 0;
-    max-width: 1150px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    overflow: hidden;
-    box-shadow: var(--shadow);
-    transition: all 0.3s ease;
-  }
-  .event-list-header {
-    padding: 0.85rem 1.25rem;
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: var(--text);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .month-group-label {
-    padding: 0.55rem 1.25rem;
-    font-size: 0.68rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--text-dim);
-    background: var(--surface-alt);
-    border-bottom: 1px solid var(--border-light);
-    transition: all 0.3s ease;
-  }
-
-  .ev-row {
-    display: grid;
-    grid-template-columns: 4px 90px 1fr auto;
-    gap: 0 1rem;
-    align-items: center;
-    padding: 0.6rem 1.25rem;
-    border-bottom: 1px solid var(--border-light);
-    font-size: 0.82rem;
-    transition: all 0.2s ease;
-    min-height: 44px;
-  }
-  .ev-row:last-child { border-bottom: none; }
-  .ev-row:hover { background: var(--hover-bg); }
-
-  .ev-bar {
-    width: 4px;
-    height: 24px;
-    border-radius: 4px;
-    transition: background 0.3s ease;
-  }
-  .ev-date {
-    font-weight: 700;
-    font-size: 0.75rem;
-    color: var(--text);
-    white-space: nowrap;
-  }
-  .ev-name {
-    font-weight: 600;
-    color: var(--text);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .ev-name small {
-    font-weight: 500;
-    color: var(--text-dim);
-    margin-left: 0.4rem;
-    font-size: 0.72rem;
-  }
-  .ev-tag {
-    font-size: 0.6rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    padding: 0.2rem 0.55rem;
-    border-radius: 5px;
-    background: var(--tag-bg);
-    color: var(--text-secondary);
-    white-space: nowrap;
-    transition: all 0.3s ease;
-  }
-
-  /* ── Footer ── */
-  .materials-section {
-    margin: 1.25rem auto 0;
-    max-width: 1150px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    overflow: hidden;
-    box-shadow: var(--shadow);
-    transition: all 0.3s ease;
-  }
   .materials-header {
-    padding: 0.75rem 1.25rem;
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: var(--text);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    border-bottom: 1px solid var(--border);
-  }
-  .materials-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0.65rem;
     padding: 0.75rem 1rem;
   }
+
+  .materials-grid {
+    gap: 0.55rem;
+    padding: 0.7rem;
+  }
+
   .mat-link {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    padding: 0.65rem 1rem;
-    text-decoration: none;
-    color: var(--text);
-    font-size: 0.82rem;
-    font-weight: 600;
-    border-radius: 8px;
-    border: 1.5px solid var(--border-light);
-    background: var(--surface);
-    transition: all 0.15s ease;
-    cursor: pointer;
-  }
-  .mat-link:hover {
-    background: var(--hover-bg);
-    border-color: var(--text-dim);
-    transform: translateY(-1px);
-    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-  }
-  .mat-link:active {
-    transform: translateY(0);
-    box-shadow: none;
-  }
-  .mat-link .mat-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .mat-link .mat-info {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    flex: 1;
-  }
-  .mat-link .mat-code {
-    font-weight: 700;
-    font-size: 0.8rem;
-  }
-  .mat-link .mat-lecturer {
-    font-weight: 500;
-    font-size: 0.68rem;
-    color: var(--text-dim);
+    min-height: 56px;
+    padding: 0.62rem 0.75rem;
   }
 
-  .footer-link {
-    margin: 1.25rem auto 0;
-    max-width: 1150px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 0.75rem 1.25rem;
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: var(--text);
-    box-shadow: var(--shadow);
-    transition: all 0.3s ease;
-  }
-  .footer-link:hover { border-color: var(--accent-blue); }
-  .footer-link .fl-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    background: var(--accent-purple-bg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
-    flex-shrink: 0;
-  }
-  .footer-link a {
-    color: var(--accent-blue);
-    font-weight: 700;
-    text-decoration: none;
-    border-bottom: 2px solid var(--accent-blue);
-    padding-bottom: 1px;
-    transition: opacity 0.15s;
-  }
-  .footer-link a:hover { opacity: 0.75; }
-
-  @media print {
-    body { padding: 1rem; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    .theme-toggle { display: none; }
-  }
-  @media (max-width: 750px) {
-    .cal-nav-prev { left: -4px; }
-    .cal-nav-next { right: -4px; }
-    .cal-slide {
-      min-width: 100%;
-      flex: 0 0 100%;
-      scroll-snap-align: center;
-    }
-    .materials-grid { grid-template-columns: repeat(2, 1fr); }
-    .ev-row { grid-template-columns: 4px 70px 1fr auto; gap: 0 0.5rem; padding: 0.5rem 0.75rem; font-size: 0.75rem; }
-    .ev-date { font-size: 0.68rem; }
-    .ev-name { font-size: 0.75rem; }
-    .ev-tag { font-size: 0.55rem; padding: 0.15rem 0.4rem; }
-    .header-left h1 { font-size: 1.2rem; }
-    .legend { gap: 0.3rem; }
-    .legend-chip {
-      font-size: 0.58rem;
-      padding: 0.25rem 0.45rem;
-      border-radius: 5px;
-    }
-    .legend-chip .dot {
-      width: 6px;
-      height: 6px;
-    }
+  .pas-dashboard .pas-footer {
+    margin-top: 0;
+    padding-block: 0.68rem;
   }
 
-
-  /* ── Dashboard Tabs ── */
-  .dashboard-tabs {
-    max-width: min(1600px, 100%);
-    margin: 0 auto clamp(0.45rem, 0.8vw, 0.65rem);
-    display: flex;
-    gap: 0.45rem;
-    padding: 0.28rem;
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    background: var(--surface);
-    box-shadow: var(--shadow);
-  }
-  .tab-btn {
-    flex: 1;
-    border: 0;
-    border-radius: 999px;
-    background: transparent;
-    color: var(--text-dim);
-    cursor: pointer;
-    font-family: inherit;
-    font-size: clamp(0.72rem, 0.9vw, 0.82rem);
-    font-weight: 800;
-    letter-spacing: 0.01em;
-    padding: clamp(0.5rem, 0.75vw, 0.68rem) 1rem;
-    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
-  }
-  .tab-btn:hover { background: var(--hover-bg); color: var(--text); }
-  .tab-btn.active {
-    background: var(--text);
-    color: var(--surface);
-    box-shadow: 0 6px 18px rgba(15,23,42,0.14);
-  }
-  [data-theme="dark"] .tab-btn.active {
-    background: #F1F5F9;
-    color: #0F172A;
-  }
-  .tab-panel { display: none; }
-  .tab-panel.active { display: block; }
-  .dashboard-shell {
-    max-width: min(1600px, 100%);
-    margin: 0 auto;
-    min-width: 0;
-  }
-
-  .pas-soon-card {
-    max-width: min(1600px, 100%);
-    margin: 0 auto;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: clamp(2rem, 8vh, 4rem) 1.25rem;
-    text-align: center;
-    font-size: clamp(1.1rem, 2vw, 1.45rem);
-    font-weight: 800;
-    color: var(--text);
-    box-shadow: var(--shadow);
-    transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-  }
-
-
-  /* ── PAS Tab Layout ── */
-  .pas-dashboard {
+  .timetable-shell {
     height: 100%;
     min-height: 0;
-    display: flex;
-    flex-direction: column;
-    gap: clamp(0.55rem, 0.9vw, 0.75rem);
   }
-  .pas-calendar-zone {
+
+  .tt-card-wrap {
     flex: 1 1 auto;
     min-height: 0;
   }
-  .pas-lower-grid {
-    flex: 0 0 auto;
-    display: grid;
-    grid-template-columns: minmax(260px, 0.8fr) minmax(420px, 1.2fr);
-    gap: clamp(0.55rem, 0.9vw, 0.75rem);
-  }
-  .pas-deadlines,
-  .pas-materials,
-  .pas-footer {
-    max-width: none;
-    margin: 0;
-  }
-  .pas-deadlines {
-    min-height: 88px;
-  }
-  .pas-blank-space {
-    min-height: 42px;
-  }
-  .pas-materials .materials-grid {
-    padding: 0.65rem;
-    gap: 0.55rem;
-  }
-  .pas-materials .mat-link {
-    padding: 0.55rem 0.75rem;
-  }
-  .pas-footer {
-    flex: 0 0 auto;
+}
+
+@media (max-height: 760px) and (min-width: 901px) {
+  #panel-pas.active,
+  #panel-timetable.active {
+    height: min(640px, var(--dashboard-panel-height, calc(100dvh - 6.5rem)));
   }
 
+  .pas-dashboard {
+    gap: 0.6rem;
+  }
 
-  /* ── Timetable Tab ── */
-  :root, [data-theme="light"] {
-    --accent-blue-bg: #F3E8FF; --accent-blue-text: #6B21A8; --accent-blue-border: #D8B4FE;
-    --accent-green-bg: #DBEAFE; --accent-green-text: #1D4ED8; --accent-green-border: #93C5FD;
-    --accent-orange-bg: #DCFCE7; --accent-orange-text: #15803D; --accent-orange-border: #86EFAC;
-    --accent-purple-bg-card: #FFEDD5; --accent-purple-text: #C2410C; --accent-purple-border: #FDBA74;
-    --insy7314: #06B6D4; --insy7314-bg: #CFFAFE; --insy7314-text: #155E75; --insy7314-border: #67E8F9;
-    --insy7315: #8B5CF6; --insy7315-bg: #EDE9FE; --insy7315-text: #5B21B6; --insy7315-border: #C4B5FD;
-    --prog7312: #EC4899; --prog7312-bg: #FCE7F3; --prog7312-text: #9D174D; --prog7312-border: #F9A8D4;
-    --prog7314: #F97316; --prog7314-bg: #FFEDD5; --prog7314-text: #9A3412; --prog7314-border: #FDBA74;
-    --tt-line: #EEF2F7;
-    --tt-muted-bg: #F8FAFC;
+  .cal {
+    padding: 0.8rem;
   }
-  [data-theme="dark"] {
-    --accent-blue-bg: rgba(168,85,247,0.16); --accent-blue-text: #D8B4FE; --accent-blue-border: rgba(216,180,254,0.35);
-    --accent-green-bg: rgba(59,130,246,0.16); --accent-green-text: #BFDBFE; --accent-green-border: rgba(147,197,253,0.35);
-    --accent-orange-bg: rgba(34,197,94,0.14); --accent-orange-text: #BBF7D0; --accent-orange-border: rgba(134,239,172,0.35);
-    --accent-purple-bg-card: rgba(249,115,22,0.16); --accent-purple-text: #FED7AA; --accent-purple-border: rgba(253,186,116,0.35);
-    --insy7314: #22D3EE; --insy7314-bg: rgba(6,182,212,0.16); --insy7314-text: #A5F3FC; --insy7314-border: rgba(103,232,249,0.42);
-    --insy7315: #A78BFA; --insy7315-bg: rgba(139,92,246,0.18); --insy7315-text: #DDD6FE; --insy7315-border: rgba(196,181,253,0.42);
-    --prog7312: #F472B6; --prog7312-bg: rgba(236,72,153,0.16); --prog7312-text: #FBCFE8; --prog7312-border: rgba(249,168,212,0.42);
-    --prog7314: #FB923C; --prog7314-bg: rgba(249,115,22,0.18); --prog7314-text: #FED7AA; --prog7314-border: rgba(253,186,116,0.42);
-    --tt-line: rgba(255,255,255,0.06);
-    --tt-muted-bg: rgba(255,255,255,0.03);
+
+  .cal-title {
+    margin-bottom: 0.5rem;
   }
-  .timetable-shell {
-    max-width: min(1600px, 100%);
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    min-width: 0;
+
+  .materials-header {
+    padding-block: 0.62rem;
   }
-  .tt-hero, .tt-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    box-shadow: var(--shadow);
-    transition: all 0.3s ease;
+
+  .materials-grid {
+    padding: 0.55rem;
   }
-  .tt-hero { padding: 1rem; }
-  .tt-hero-top {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 1rem;
-    margin-bottom: 0.85rem;
+
+  .mat-link {
+    min-height: 50px;
   }
-  .tt-title {
-    font-size: 1.1rem;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    color: var(--text);
+
+  .tt-card {
+    padding: 0.7rem;
   }
-  .tt-sub {
-    margin-top: 0.15rem;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--text-dim);
+
+  .tt-grid {
+    grid-template-columns: 60px repeat(5, minmax(0, 1fr));
+    grid-template-rows: 38px repeat(9, minmax(32px, 1fr));
   }
-  .tt-pill {
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    background: var(--surface-alt);
-    color: var(--text-secondary);
-    font-size: 0.66rem;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    padding: 0.35rem 0.65rem;
-    text-transform: uppercase;
-    white-space: nowrap;
+
+  .tt-code { font-size: 0.9rem; }
+  .tt-module { font-size: 0.66rem; }
+  .tt-meta span { font-size: 0.6rem; }
+  .tt-day-name,
+  .tt-time-cell { font-size: 0.8rem; }
+  .tt-day-date,
+  .tt-time-head { font-size: 0.66rem; }
+}
+
+/* ---------- Tablet and mobile ---------- */
+@media (max-width: 900px) {
+  body {
+    padding: clamp(0.75rem, 4vw, 1rem);
   }
-  .tt-controls {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    gap: 0.65rem;
-    align-items: center;
-  }
-  .tt-semester-toggle {
-    display: inline-flex;
-    gap: 0.3rem;
-    padding: 0.28rem;
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    background: var(--surface-alt);
-  }
-  .tt-semester-btn, .tt-nav-btn {
-    border: 0;
-    background: transparent;
-    color: var(--text-dim);
-    cursor: pointer;
-    font-family: inherit;
-    font-weight: 800;
-    transition: all 0.2s ease;
-  }
-  .tt-semester-btn {
-    border-radius: 999px;
-    font-size: 0.72rem;
-    padding: 0.45rem 0.7rem;
-  }
-  .tt-semester-btn.active {
-    background: var(--text);
-    color: var(--surface);
-  }
-  [data-theme="dark"] .tt-semester-btn.active { background: #F1F5F9; color: #0F172A; }
-  .tt-week-select {
+
+  .dashboard-tabs {
     width: 100%;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    background: var(--surface);
-    color: var(--text);
-    font-family: inherit;
-    font-size: 0.78rem;
-    font-weight: 700;
-    padding: 0.65rem 0.75rem;
-    outline: none;
+    margin-top: 0;
   }
-  .tt-week-select:focus { border-color: var(--accent-blue); }
-  .tt-nav-group { display: flex; gap: 0.4rem; }
-  .tt-nav-btn {
-    width: 34px;
-    height: 34px;
-    border: 1px solid var(--border);
-    border-radius: 50%;
-    background: var(--surface);
-    color: var(--text);
-    font-size: 1.15rem;
-    display: grid;
-    place-items: center;
-  }
-  .tt-nav-btn:hover { background: var(--hover-bg); border-color: var(--text-dim); }
-  .tt-nav-btn:disabled { opacity: 0.35; cursor: not-allowed; }
-  .tt-legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.45rem;
-    margin-top: 0.85rem;
-  }
-  .tt-legend-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    background: var(--surface-alt);
-    color: var(--text-secondary);
-    font-size: 0.66rem;
-    font-weight: 800;
-    padding: 0.35rem 0.6rem;
-  }
-  .tt-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--tt-color); }
 
-  .tt-card-wrap {
-    position: relative;
-    touch-action: pan-y;
-    overflow: hidden;
-    cursor: grab;
-    user-select: none;
+  .pas-calendar-zone {
+    margin-bottom: 1rem;
   }
-  .tt-card-wrap.is-swiping { cursor: grabbing; }
+
+  .calendars-wrapper {
+    padding: 0;
+  }
+
+  .cal-nav,
   .tt-page-nav {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 5;
     width: 36px;
     height: 36px;
-    border-radius: 50%;
-    border: 1.5px solid var(--border);
-    background: var(--surface);
-    color: var(--text);
-    font-size: 1.3rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    transition: all 0.15s ease;
-    line-height: 1;
-    font-family: inherit;
-    font-weight: 900;
-  }
-  .tt-page-nav:hover { background: var(--hover-bg); border-color: var(--text-dim); }
-  .tt-page-nav:disabled { opacity: 0.35; cursor: not-allowed; }
-  .tt-page-nav-prev { left: -18px; }
-  .tt-page-nav-next { right: -18px; }
-  .tt-card-head-right {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 0.45rem;
-    flex-wrap: wrap;
   }
 
-  .tt-card { padding: clamp(0.65rem, 0.9vw, 0.95rem); overflow: hidden; }
-  .tt-card-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    margin-bottom: clamp(0.45rem, 0.8vw, 0.7rem);
+  .cal-nav-prev,
+  .tt-page-nav-prev { left: -6px; }
+
+  .cal-nav-next,
+  .tt-page-nav-next { right: -6px; }
+
+  .cal-slide {
+    flex-basis: 100%;
+    min-width: 100%;
+    scroll-snap-align: center;
   }
-  .tt-card-head-simple { justify-content: flex-start; }
-  .tt-week-title { font-size: clamp(0.9rem, 1.2vw, 1.08rem); font-weight: 800; color: var(--text); }
-  .tt-week-dates { font-size: 0.72rem; font-weight: 600; color: var(--text-dim); margin-top: 0.1rem; }
-  .tt-kind {
-    border-radius: 999px;
-    border: 1px solid var(--border);
-    background: var(--surface-alt);
-    color: var(--text-secondary);
-    font-size: 0.62rem;
-    font-weight: 900;
-    letter-spacing: 0.12em;
-    padding: 0.32rem 0.65rem;
-    text-transform: uppercase;
-  }
-  .tt-grid {
-    display: grid;
-    grid-template-columns: minmax(58px, 72px) repeat(5, minmax(0, 1fr));
-    grid-template-rows: minmax(34px, 42px) repeat(9, minmax(36px, 1fr));
-    border: 1px solid var(--border);
-    border-radius: 13px;
-    overflow: hidden;
-    background: var(--surface);
-  }
-  .tt-time-head, .tt-day-head, .tt-time-cell, .tt-bg-cell {
-    border-right: 1px solid var(--tt-line);
-    border-bottom: 1px solid var(--tt-line);
-  }
-  .tt-time-head, .tt-day-head {
-    background: var(--surface-alt);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-  }
-  .tt-time-head {
-    color: var(--text-dim);
-    font-size: 0.62rem;
-    font-weight: 900;
-    letter-spacing: 0.13em;
-    text-transform: uppercase;
-  }
-  .tt-day-date {
-    color: var(--text-dim);
-    font-size: clamp(0.48rem, 0.6vw, 0.58rem);
-    font-weight: 900;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-  }
-  .tt-day-name { color: var(--text); font-size: clamp(0.6rem, 0.78vw, 0.72rem); font-weight: 900; margin-top: 0.05rem; }
-  .tt-time-cell {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--surface);
-    color: var(--text-secondary);
-    font-size: clamp(0.52rem, 0.65vw, 0.64rem);
-    font-weight: 900;
-  }
-  .tt-bg-cell { background: var(--surface); }
-  .tt-bg-cell.lunch { background: var(--tt-muted-bg); }
-  .tt-lunch-label {
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-dim);
-    opacity: 0.4;
-    font-size: 0.54rem;
-    font-weight: 900;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-  }
-  .tt-item { padding: 0.28rem; z-index: 1; }
-  .tt-session, .tt-event {
-    height: 100%;
-    border-radius: 10px;
-    border: 1.5px solid var(--tt-border);
-    background: var(--tt-bg);
-    color: var(--tt-text);
-    overflow: hidden;
-  }
-  .tt-session {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    padding: clamp(0.28rem, 0.45vw, 0.48rem) clamp(0.35rem, 0.5vw, 0.55rem);
-  }
-  .tt-session::after {
-    content: '';
-    position: absolute;
-    right: 0.35rem;
-    top: 0.35rem;
-    bottom: 0.35rem;
-    width: 4px;
-    border-radius: 999px;
-    background: var(--tt-color);
-  }
-  .tt-code { font-size: clamp(0.58rem, 0.78vw, 0.72rem); font-weight: 900; letter-spacing: -0.01em; padding-right: 0.45rem; }
-  .tt-module { margin-top: 0.06rem; font-size: clamp(0.48rem, 0.62vw, 0.58rem); font-weight: 700; line-height: 1.15; opacity: 0.9; padding-right: 0.55rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-  .tt-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: clamp(0.16rem, 0.3vw, 0.3rem);
-    margin-top: auto;
-    padding-right: 0.5rem;
-  }
-  .tt-meta span {
-    border-radius: 6px;
-    background: rgba(255,255,255,0.5);
-    padding: 0.14rem 0.3rem;
-    font-size: clamp(0.46rem, 0.56vw, 0.56rem);
-    font-weight: 900;
-  }
-  [data-theme="dark"] .tt-meta span { background: rgba(255,255,255,0.08); }
-  .tt-event {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    border-style: dashed;
-    padding: 0.75rem;
-    font-size: 0.68rem;
-    font-weight: 900;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-  }
-  .tt-event.assessment { --tt-bg: #FEF3C7; --tt-text: #92400E; --tt-border: #F59E0B; }
-  .tt-event.catchup { --tt-bg: #F1F5F9; --tt-text: #475569; --tt-border: #CBD5E1; }
-  .tt-event.poe { --tt-bg: #DCFCE7; --tt-text: #166534; --tt-border: #86EFAC; }
-  .tt-event.break { --tt-bg: #FFE4E6; --tt-text: #BE123C; --tt-border: #FDA4AF; }
-  .tt-event.holiday { --tt-bg: #FEE2E2; --tt-text: #B91C1C; --tt-border: #FCA5A5; }
-  [data-theme="dark"] .tt-event.assessment { --tt-bg: rgba(245,158,11,0.14); --tt-text: #FDE68A; --tt-border: rgba(245,158,11,0.38); }
-  [data-theme="dark"] .tt-event.catchup { --tt-bg: rgba(148,163,184,0.12); --tt-text: #CBD5E1; --tt-border: rgba(148,163,184,0.3); }
-  [data-theme="dark"] .tt-event.poe { --tt-bg: rgba(34,197,94,0.14); --tt-text: #BBF7D0; --tt-border: rgba(134,239,172,0.35); }
-  [data-theme="dark"] .tt-event.break { --tt-bg: rgba(244,63,94,0.14); --tt-text: #FECDD3; --tt-border: rgba(253,164,175,0.35); }
-  [data-theme="dark"] .tt-event.holiday { --tt-bg: rgba(239,68,68,0.14); --tt-text: #FECACA; --tt-border: rgba(252,165,165,0.35); }
-  .tt-empty {
-    border: 1px dashed var(--border);
-    border-radius: 10px;
-    background: var(--surface-alt);
-    color: var(--text-dim);
-    font-size: 0.72rem;
-    font-weight: 800;
+
+  .cal {
     padding: 1rem;
-    text-align: center;
   }
-  .tt-mobile { display: none; }
-  .mod-INSY7314 { --tt-color: var(--insy7314); --tt-bg: var(--insy7314-bg); --tt-text: var(--insy7314-text); --tt-border: var(--insy7314-border); }
-  .mod-INSY7315 { --tt-color: var(--insy7315); --tt-bg: var(--insy7315-bg); --tt-text: var(--insy7315-text); --tt-border: var(--insy7315-border); }
-  .mod-PROG7312 { --tt-color: var(--prog7312); --tt-bg: var(--prog7312-bg); --tt-text: var(--prog7312-text); --tt-border: var(--prog7312-border); }
-  .mod-PROG7314 { --tt-color: var(--prog7314); --tt-bg: var(--prog7314-bg); --tt-text: var(--prog7314-text); --tt-border: var(--prog7314-border); }
 
-  @media (min-width: 901px) {
-    body { overflow-y: hidden; }
-    .dashboard-shell {
-      height: var(--dashboard-panel-height, calc(100dvh - 8rem));
-      overflow: hidden;
-    }
-    .tab-panel.active,
-    #panel-timetable.active,
-    #panel-pas.active {
-      height: 100%;
-      min-height: 0;
-    }
-    .pas-soon-card {
-      height: 100%;
-      display: grid;
-      place-items: center;
-      padding: 1rem;
-    }
-    .timetable-shell,
-    .tt-card-wrap,
-    .tt-card {
-      height: 100%;
-      min-height: 0;
-    }
-    .tt-card {
-      display: flex;
-      flex-direction: column;
-    }
-    .tt-card-head { flex: 0 0 auto; }
-    .tt-grid {
-      flex: 1 1 auto;
-      min-height: 0;
-      height: 100%;
-    }
-    .calendars-wrapper {
-      height: 100%;
-    }
-    .calendars,
-    .cal-slide,
-    .cal-slide .cal {
-      height: 100%;
-      min-height: 0;
-    }
-    .cal-slide .cal {
-      display: flex;
-      flex-direction: column;
-    }
-    .cal-grid {
-      flex: 1 1 auto;
-      min-height: 0;
-      grid-template-rows: auto repeat(6, minmax(0, 1fr));
-    }
-    .cal-day { min-height: 0; }
-  }
-
-  @media (max-width: 1200px) and (min-width: 901px) {
-    .tt-grid {
-      grid-template-columns: 58px repeat(5, minmax(0, 1fr));
-      grid-template-rows: minmax(30px, 36px) repeat(9, minmax(30px, 1fr));
-    }
-    .tt-item { padding: 0.18rem; }
-    .tt-session { border-radius: 8px; }
-    .tt-session::after { right: 0.22rem; top: 0.22rem; bottom: 0.22rem; width: 3px; }
-    .tt-time-head { font-size: 0.52rem; }
-    .tt-lunch-label { font-size: 0.46rem; }
-  }
-
-  @media (max-height: 720px) and (min-width: 901px) {
-    body { padding-top: 0.55rem; padding-bottom: 0.55rem; }
-    .header { margin-bottom: 0.4rem; }
-    .dashboard-tabs { margin-bottom: 0.45rem; }
-    .tab-btn { padding-top: 0.42rem; padding-bottom: 0.42rem; }
-    .tt-card { padding: 0.5rem; }
-    .tt-card-head { margin-bottom: 0.35rem; }
-    .tt-grid {
-      grid-template-columns: 54px repeat(5, minmax(0, 1fr));
-      grid-template-rows: minmax(26px, 32px) repeat(9, minmax(26px, 1fr));
-    }
-    .tt-code { font-size: 0.55rem; }
-    .tt-module { font-size: 0.45rem; -webkit-line-clamp: 1; }
-    .tt-meta span { font-size: 0.43rem; padding: 0.1rem 0.22rem; }
-  }
-
-  @media (max-width: 900px) {
-    body { padding: clamp(0.75rem, 4vw, 1rem); overflow-y: auto; }
-    .tt-page-nav-prev { left: -4px; }
-    .tt-page-nav-next { right: -4px; }
-    .dashboard-tabs { margin-top: -0.35rem; }
-    .tt-controls { grid-template-columns: 1fr; }
-    .tt-nav-group { justify-content: flex-end; }
-    .tt-grid { display: none; }
-    .tt-mobile { display: grid; gap: 0.75rem; }
-    .tt-mobile-day {
-      border: 1px solid var(--border);
-      border-radius: 13px;
-      background: var(--surface);
-      padding: 0.75rem;
-    }
-    .tt-mobile-date {
-      color: var(--text-dim);
-      font-size: 0.62rem;
-      font-weight: 900;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-    .tt-mobile-name { color: var(--text); font-size: 0.9rem; font-weight: 900; margin-top: 0.1rem; }
-    .tt-mobile-sessions { display: grid; gap: 0.55rem; margin-top: 0.65rem; }
-    .tt-mobile .tt-session { min-height: 92px; }
-    .tt-mobile .tt-event { min-height: 92px; }
-  }
-
-
-  @media (max-width: 900px) {
-    .pas-dashboard { height: auto; }
-    .pas-calendar-zone { min-height: 0; }
-    .pas-lower-grid { grid-template-columns: 1fr; }
-    .pas-deadlines { min-height: 78px; }
-    .pas-materials .materials-grid { grid-template-columns: repeat(2, 1fr); }
-  }
-
-  @media (max-width: 520px) {
-    .pas-materials .materials-grid { grid-template-columns: 1fr; }
-  }
-
-
-  /* ── Readable PAS layout reset ──
-     Keeps the PAS calendar readable and restores the lower PAS sections to
-     the original stacked layout instead of squeezing everything side-by-side. */
-  .header,
-  .dashboard-tabs {
-    max-width: 1150px;
-  }
-
-  #panel-pas .pas-dashboard {
-    display: block;
-    height: auto;
-  }
-
-  #panel-pas .pas-calendar-zone {
-    margin: 0 auto 1.25rem;
-    max-width: 1150px;
-  }
-
-  #panel-pas .calendars-wrapper {
-    max-width: 1150px;
-    height: auto;
-  }
-
-  #panel-pas .calendars {
-    gap: 1rem;
-    padding-bottom: 0.5rem;
-  }
-
-  #panel-pas .cal-slide {
-    min-width: calc((100% - 2rem) / 3);
-    flex: 0 0 calc((100% - 2rem) / 3);
-  }
-
-  #panel-pas .cal-slide .cal {
-    height: auto;
-    display: block;
-    padding: 1.25rem;
-  }
-
-  #panel-pas .cal-title {
-    font-size: 1.05rem;
-    margin-bottom: 0.85rem;
-  }
-
-  #panel-pas .cal-title span {
-    font-size: 0.9rem;
-  }
-
-  #panel-pas .cal-grid {
-    gap: 0.3rem;
-    grid-template-rows: none;
-  }
-
-  #panel-pas .cal-dow {
-    font-size: 0.68rem;
-    padding-bottom: 0.45rem;
-  }
-
-  #panel-pas .cal-day {
-    font-size: 0.9rem;
-    font-weight: 700;
-  }
-
-  #panel-pas .cal-day.today::before {
-    inset: 3px;
-    border-width: 2.5px;
-  }
-
-  #panel-pas .cal-dots {
-    margin-top: 0.85rem;
-  }
-
-  #panel-pas .pas-lower-grid {
-    display: block;
-    max-width: 1150px;
-    margin: 0 auto;
-  }
-
-  #panel-pas .pas-deadlines,
-  #panel-pas .pas-materials,
-  #panel-pas .pas-footer {
-    max-width: 1150px;
-    margin: 1.25rem auto 0;
-  }
-
-  #panel-pas .pas-deadlines {
-    min-height: 110px;
-  }
-
-  #panel-pas .event-list-header,
-  #panel-pas .materials-header {
-    font-size: 0.88rem;
-    padding: 0.9rem 1.25rem;
-  }
-
-  #panel-pas .materials-grid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0.75rem;
-    padding: 0.85rem 1rem;
-  }
-
-  #panel-pas .mat-link {
-    padding: 0.75rem 1rem;
-    font-size: 0.9rem;
-  }
-
-  #panel-pas .mat-link .mat-code {
-    font-size: 0.9rem;
-  }
-
-  #panel-pas .mat-link .mat-lecturer {
-    font-size: 0.74rem;
-  }
-
-  #panel-pas .footer-link {
-    font-size: 0.92rem;
-    padding: 0.85rem 1.25rem;
-  }
-
-  @media (min-width: 901px) {
-    body {
-      overflow-y: auto !important;
-    }
-
-    .dashboard-shell {
-      height: auto !important;
-      overflow: visible !important;
-    }
-
-    #panel-pas.active {
-      height: auto !important;
-      min-height: 0 !important;
-      overflow: visible !important;
-    }
-
-    #panel-pas .calendars-wrapper,
-    #panel-pas .calendars,
-    #panel-pas .cal-slide,
-    #panel-pas .cal-slide .cal {
-      height: auto !important;
-      min-height: 0 !important;
-    }
-
-    #panel-pas .cal-slide .cal {
-      display: block !important;
-    }
-
-    #panel-pas .cal-grid {
-      flex: none !important;
-      grid-template-rows: none !important;
-    }
-
-    #panel-timetable.active {
-      height: var(--dashboard-panel-height, calc(100dvh - 8rem)) !important;
-      min-height: 0 !important;
-      overflow: hidden !important;
-    }
-  }
-
-  @media (max-width: 900px) {
-    .header,
-    .dashboard-tabs,
-    #panel-pas .pas-calendar-zone,
-    #panel-pas .pas-lower-grid,
-    #panel-pas .pas-deadlines,
-    #panel-pas .pas-materials,
-    #panel-pas .pas-footer {
-      max-width: 100%;
-    }
-
-    #panel-pas .pas-calendar-zone {
-      margin-bottom: 1rem;
-    }
-
-    #panel-pas .cal-slide {
-      min-width: 100%;
-      flex: 0 0 100%;
-    }
-
-    #panel-pas .cal-slide .cal {
-      padding: 1rem;
-    }
-
-    #panel-pas .cal-title {
-      font-size: 1rem;
-    }
-
-    #panel-pas .cal-day {
-      font-size: 0.95rem;
-    }
-
-    #panel-pas .pas-materials .materials-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  @media (max-width: 520px) {
-    #panel-pas .pas-materials .materials-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-
-
-
-  /* ── Readable timetable text override ──
-     Keeps the weekly grid fitting on laptop/desktop, but makes the actual
-     timetable content much easier to read. */
-  .tt-week-title {
-    font-size: clamp(1.15rem, 1.45vw, 1.35rem) !important;
-    line-height: 1.15;
-  }
-
-  .tt-time-head {
-    font-size: clamp(0.68rem, 0.82vw, 0.82rem) !important;
-    letter-spacing: 0.08em;
-  }
-
-  .tt-day-date {
-    font-size: clamp(0.62rem, 0.74vw, 0.74rem) !important;
-    letter-spacing: 0.08em;
-  }
-
-  .tt-day-name {
-    font-size: clamp(0.78rem, 0.94vw, 0.94rem) !important;
-    line-height: 1.05;
-  }
-
-  .tt-time-cell {
-    font-size: clamp(0.72rem, 0.86vw, 0.86rem) !important;
-  }
-
-  .tt-session {
-    padding: clamp(0.42rem, 0.56vw, 0.62rem) clamp(0.48rem, 0.64vw, 0.72rem) !important;
-  }
-
-  .tt-code {
-    font-size: clamp(0.78rem, 1vw, 0.98rem) !important;
-    line-height: 1.05;
-    padding-right: 0.7rem;
-  }
-
-  .tt-module {
-    font-size: clamp(0.62rem, 0.78vw, 0.76rem) !important;
-    line-height: 1.18;
-    -webkit-line-clamp: 2 !important;
-    padding-right: 0.8rem;
-  }
-
-  .tt-meta {
-    gap: 0.28rem;
-    padding-right: 0.65rem;
-  }
-
-  .tt-meta span {
-    font-size: clamp(0.6rem, 0.72vw, 0.72rem) !important;
-    line-height: 1;
-    padding: 0.2rem 0.42rem !important;
-  }
-
-  .tt-lunch-label {
-    font-size: clamp(0.58rem, 0.7vw, 0.7rem) !important;
-  }
-
-  .tt-event {
-    font-size: clamp(0.8rem, 0.95vw, 0.95rem) !important;
-    line-height: 1.2;
-  }
-
-  @media (max-height: 720px) and (min-width: 901px) {
-    .tt-week-title {
-      font-size: 1.12rem !important;
-    }
-
-    .tt-code {
-      font-size: 0.88rem !important;
-    }
-
-    .tt-module {
-      font-size: 0.68rem !important;
-      line-height: 1.15;
-      -webkit-line-clamp: 2 !important;
-    }
-
-    .tt-meta span {
-      font-size: 0.62rem !important;
-      padding: 0.16rem 0.34rem !important;
-    }
-
-    .tt-time-cell,
-    .tt-day-name {
-      font-size: 0.78rem !important;
-    }
-
-    .tt-day-date,
-    .tt-time-head {
-      font-size: 0.66rem !important;
-    }
-  }
-
-  @media (max-width: 900px) {
-    .tt-mobile-name {
-      font-size: 1.05rem !important;
-    }
-
-    .tt-mobile-date {
-      font-size: 0.74rem !important;
-    }
-
-    .tt-mobile .tt-code {
-      font-size: 1rem !important;
-    }
-
-    .tt-mobile .tt-module {
-      font-size: 0.78rem !important;
-    }
-
-    .tt-mobile .tt-meta span {
-      font-size: 0.72rem !important;
-    }
-  }
-
-
-
-  /* ── Final timetable swipe animation + readability pass ── */
-  .tt-card {
-    transform: translateX(var(--tt-drag-x, 0px));
-    will-change: transform, opacity;
-  }
-
-  .tt-card-wrap.is-swiping .tt-card {
-    transition: none !important;
-  }
-
-  .tt-card-wrap.tt-slide-next .tt-card {
-    animation: ttSlideInNext 360ms cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  .tt-card-wrap.tt-slide-prev .tt-card {
-    animation: ttSlideInPrev 360ms cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  @keyframes ttSlideInNext {
-    0% { opacity: 0.35; transform: translateX(72px); }
-    65% { opacity: 1; transform: translateX(-6px); }
-    100% { opacity: 1; transform: translateX(0); }
-  }
-
-  @keyframes ttSlideInPrev {
-    0% { opacity: 0.35; transform: translateX(-72px); }
-    65% { opacity: 1; transform: translateX(6px); }
-    100% { opacity: 1; transform: translateX(0); }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .tt-card-wrap.tt-slide-next .tt-card,
-    .tt-card-wrap.tt-slide-prev .tt-card {
-      animation: none;
-    }
-  }
-
-  @media (min-width: 901px) {
-    #panel-timetable.active {
-      height: var(--dashboard-panel-height, calc(100dvh - 7.2rem)) !important;
-    }
-
-    .timetable-shell {
-      max-width: min(1720px, 100%) !important;
-    }
-
-    .tt-card {
-      padding: clamp(0.75rem, 0.95vw, 1.05rem) !important;
-      border-radius: 18px !important;
-    }
-
-    .tt-card-head {
-      margin-bottom: clamp(0.45rem, 0.7vw, 0.65rem) !important;
-    }
-
-    .tt-grid {
-      grid-template-columns: minmax(68px, 82px) repeat(5, minmax(0, 1fr)) !important;
-      grid-template-rows: minmax(44px, 52px) repeat(9, minmax(42px, 1fr)) !important;
-    }
-
-    .tt-item {
-      padding: clamp(0.32rem, 0.42vw, 0.46rem) !important;
-    }
-
-    .tt-session {
-      padding: clamp(0.52rem, 0.62vw, 0.68rem) clamp(0.62rem, 0.72vw, 0.82rem) !important;
-      border-radius: 12px !important;
-      border-width: 2px !important;
-    }
-
-    .tt-session::after {
-      right: 0.42rem !important;
-      top: 0.42rem !important;
-      bottom: 0.42rem !important;
-      width: 5px !important;
-    }
-
-    .tt-code {
-      font-size: clamp(1rem, 1.16vw, 1.14rem) !important;
-      line-height: 1.05 !important;
-      letter-spacing: -0.02em !important;
-    }
-
-    .tt-module {
-      font-size: clamp(0.76rem, 0.88vw, 0.86rem) !important;
-      line-height: 1.18 !important;
-      font-weight: 800 !important;
-      -webkit-line-clamp: 2 !important;
-    }
-
-    .tt-meta {
-      gap: 0.32rem !important;
-    }
-
-    .tt-meta span {
-      font-size: clamp(0.7rem, 0.8vw, 0.78rem) !important;
-      padding: 0.22rem 0.46rem !important;
-      border-radius: 7px !important;
-    }
-
-    .tt-time-head {
-      font-size: clamp(0.78rem, 0.9vw, 0.88rem) !important;
-    }
-
-    .tt-day-date {
-      font-size: clamp(0.7rem, 0.8vw, 0.78rem) !important;
-    }
-
-    .tt-day-name {
-      font-size: clamp(0.92rem, 1.04vw, 1rem) !important;
-    }
-
-    .tt-time-cell {
-      font-size: clamp(0.86rem, 0.98vw, 0.96rem) !important;
-    }
-
-    .tt-lunch-label {
-      font-size: clamp(0.68rem, 0.78vw, 0.76rem) !important;
-    }
-  }
-
-  @media (max-height: 760px) and (min-width: 901px) {
-    #panel-timetable.active {
-      height: calc(100dvh - 6.7rem) !important;
-    }
-
-    .tt-card {
-      padding: 0.65rem !important;
-    }
-
-    .tt-grid {
-      grid-template-columns: 64px repeat(5, minmax(0, 1fr)) !important;
-      grid-template-rows: 40px repeat(9, minmax(36px, 1fr)) !important;
-    }
-
-    .tt-item {
-      padding: 0.28rem !important;
-    }
-
-    .tt-session {
-      padding: 0.46rem 0.56rem !important;
-    }
-
-    .tt-code {
-      font-size: 0.96rem !important;
-    }
-
-    .tt-module {
-      font-size: 0.72rem !important;
-      line-height: 1.12 !important;
-    }
-
-    .tt-meta span {
-      font-size: 0.66rem !important;
-      padding: 0.18rem 0.38rem !important;
-    }
-
-    .tt-time-cell,
-    .tt-day-name {
-      font-size: 0.86rem !important;
-    }
-
-    .tt-day-date,
-    .tt-time-head {
-      font-size: 0.72rem !important;
-    }
-  }
-
-
-  /* ── Consistent PAS / Timetable layout alignment ──
-     Keeps both tabs visually anchored to the same 1150px content width,
-     fixes timetable arrow clipping, and keeps common titles aligned so tab
-     switching feels smoother. */
-  :root {
-    --dashboard-content-width: 1150px;
-  }
-
-  .header,
-  .dashboard-tabs,
-  .dashboard-shell,
-  #panel-pas .pas-calendar-zone,
-  #panel-pas .pas-lower-grid,
-  #panel-pas .pas-deadlines,
-  #panel-pas .pas-materials,
-  #panel-pas .pas-footer,
-  .timetable-shell {
-    width: 100%;
-    max-width: var(--dashboard-content-width) !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-  }
-
-  #panel-pas .calendars-wrapper,
-  #panel-timetable .tt-card-wrap {
-    width: 100%;
-    max-width: var(--dashboard-content-width) !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-  }
-
-  #panel-timetable .tt-card-wrap {
-    overflow: visible !important;
-    padding: 0 !important;
-  }
-
-  #panel-timetable .tt-card {
-    width: 100%;
-    transform-origin: center center;
-  }
-
-  #panel-timetable .tt-card-head {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
-
-  #panel-timetable .tt-week-title {
-    margin-left: 0 !important;
-  }
-
-  #panel-timetable .tt-page-nav {
-    width: 38px !important;
-    height: 38px !important;
-    font-size: 1.35rem !important;
-    z-index: 20 !important;
-    opacity: 0.96;
-  }
-
-  #panel-timetable .tt-page-nav-prev { left: 0.7rem !important; }
-  #panel-timetable .tt-page-nav-next { right: 0.7rem !important; }
-
-  @media (min-width: 901px) {
-    #panel-timetable.active {
-      height: min(720px, var(--dashboard-panel-height, calc(100dvh - 7.2rem))) !important;
-      overflow: visible !important;
-    }
-
-    #panel-timetable .timetable-shell,
-    #panel-timetable .tt-card-wrap,
-    #panel-timetable .tt-card {
-      height: 100%;
-      min-height: 0;
-    }
-
-    #panel-timetable .tt-card {
-      display: flex;
-      flex-direction: column;
-      padding: clamp(0.8rem, 1vw, 1rem) !important;
-    }
-
-    #panel-timetable .tt-card-head {
-      min-height: 32px;
-      margin-bottom: 0.65rem !important;
-    }
-
-    #panel-timetable .tt-grid {
-      flex: 1 1 auto;
-      min-height: 0;
-      height: 100%;
-      grid-template-columns: 66px repeat(5, minmax(0, 1fr)) !important;
-      grid-template-rows: 44px repeat(9, minmax(38px, 1fr)) !important;
-    }
-
-    #panel-timetable .tt-item {
-      padding: clamp(0.26rem, 0.34vw, 0.36rem) !important;
-    }
-
-    #panel-timetable .tt-session {
-      padding: clamp(0.42rem, 0.5vw, 0.56rem) clamp(0.46rem, 0.55vw, 0.64rem) !important;
-    }
-
-    #panel-timetable .tt-code {
-      font-size: clamp(0.88rem, 1vw, 1.02rem) !important;
-    }
-
-    #panel-timetable .tt-module {
-      font-size: clamp(0.66rem, 0.75vw, 0.78rem) !important;
-      line-height: 1.18 !important;
-    }
-
-    #panel-timetable .tt-meta span {
-      font-size: clamp(0.62rem, 0.7vw, 0.72rem) !important;
-      padding: 0.18rem 0.36rem !important;
-    }
-
-    #panel-timetable .tt-day-name {
-      font-size: clamp(0.82rem, 0.95vw, 0.96rem) !important;
-    }
-
-    #panel-timetable .tt-day-date,
-    #panel-timetable .tt-time-head {
-      font-size: clamp(0.66rem, 0.76vw, 0.78rem) !important;
-    }
-
-    #panel-timetable .tt-time-cell {
-      font-size: clamp(0.78rem, 0.9vw, 0.92rem) !important;
-    }
-  }
-
-  @media (max-height: 760px) and (min-width: 901px) {
-    #panel-timetable.active {
-      height: min(640px, calc(100dvh - 6.5rem)) !important;
-    }
-
-    #panel-timetable .tt-card {
-      padding: 0.7rem !important;
-    }
-
-    #panel-timetable .tt-card-head {
-      margin-bottom: 0.45rem !important;
-    }
-
-    #panel-timetable .tt-grid {
-      grid-template-columns: 60px repeat(5, minmax(0, 1fr)) !important;
-      grid-template-rows: 38px repeat(9, minmax(32px, 1fr)) !important;
-    }
-
-    #panel-timetable .tt-code { font-size: 0.9rem !important; }
-    #panel-timetable .tt-module { font-size: 0.66rem !important; }
-    #panel-timetable .tt-meta span { font-size: 0.6rem !important; }
-    #panel-timetable .tt-day-name,
-    #panel-timetable .tt-time-cell { font-size: 0.8rem !important; }
-    #panel-timetable .tt-day-date,
-    #panel-timetable .tt-time-head { font-size: 0.66rem !important; }
-  }
-
-  @media (max-width: 900px) {
-    .header,
-    .dashboard-tabs,
-    .dashboard-shell,
-    #panel-pas .pas-calendar-zone,
-    #panel-pas .pas-lower-grid,
-    #panel-pas .pas-deadlines,
-    #panel-pas .pas-materials,
-    #panel-pas .pas-footer,
-    .timetable-shell {
-      max-width: 100% !important;
-    }
-
-    #panel-timetable .tt-page-nav-prev { left: 0.35rem !important; }
-    #panel-timetable .tt-page-nav-next { right: 0.35rem !important; }
-  }
-
-
-  /* ── Final tab alignment and arrow placement fix ──
-     Reserve scrollbar space so PAS and Timetable do not shift horizontally
-     when one tab is taller than the other. Timetable arrows now use the same
-     half-outside placement as the PAS calendar arrows. */
-  html {
-    scrollbar-gutter: stable;
-  }
+  .cal-title { font-size: 1rem; }
+  .cal-day { font-size: 0.95rem; }
 
-  @supports not (scrollbar-gutter: stable) {
-    html { overflow-y: scroll; }
+  .pas-lower-grid {
+    grid-template-columns: 1fr;
   }
 
-  #panel-pas .calendars-wrapper,
-  #panel-timetable .tt-card-wrap {
-    position: relative;
-    overflow: visible !important;
+  .materials-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  #panel-timetable,
   #panel-timetable.active,
-  #panel-timetable .timetable-shell,
-  #panel-timetable .tt-card-wrap {
-    overflow: visible !important;
+  .tt-week-scroller,
+  .tt-week-slide,
+  .tt-card {
+    height: auto;
   }
 
-  #panel-timetable .tt-page-nav {
-    width: 36px !important;
-    height: 36px !important;
-    font-size: 1.3rem !important;
-    z-index: 30 !important;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
-  }
-
-  #panel-timetable .tt-page-nav-prev { left: -18px !important; }
-  #panel-timetable .tt-page-nav-next { right: -18px !important; }
-
-  @media (max-width: 900px) {
-    #panel-timetable .tt-page-nav-prev { left: -4px !important; }
-    #panel-timetable .tt-page-nav-next { right: -4px !important; }
-  }
-
-
-  /* ── Smooth timetable swipe polish ──
-     Make timetable week changes feel closer to the PAS calendar carousel:
-     the card follows the drag, glides out, then the next week glides in. */
-  #panel-timetable .tt-card {
-    transform: translateX(var(--tt-drag-x, 0px));
-    backface-visibility: hidden;
-    will-change: transform, opacity;
-  }
-
-  #panel-timetable .tt-card-wrap.is-swiping .tt-card {
-    transition: none !important;
-  }
-
-  #panel-timetable .tt-card-wrap.tt-snap-back .tt-card {
-    transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1), opacity 240ms ease !important;
-  }
-
-
-  /* ── Native timetable carousel ──
-     Uses browser horizontal scrolling + CSS scroll-snap, matching the PAS
-     calendar feel. This removes the lag from manual transform animations. */
-  #panel-timetable .tt-card-wrap {
-    cursor: default !important;
-    touch-action: pan-y pinch-zoom;
-  }
-
-  #panel-timetable .tt-week-scroller {
-    width: 100%;
-    height: 100%;
-    min-height: 0;
-    display: flex;
-    overflow-x: auto;
-    overflow-y: hidden;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
-    overscroll-behavior-x: contain;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    border-radius: 18px;
-  }
-
-  #panel-timetable .tt-week-scroller::-webkit-scrollbar {
+  .tt-grid {
     display: none;
   }
 
-  #panel-timetable .tt-week-slide {
-    flex: 0 0 100%;
-    min-width: 100%;
-    height: 100%;
-    min-height: 0;
-    scroll-snap-align: center;
-    scroll-snap-stop: always;
+  .tt-week-title {
+    font-size: 1.08rem;
   }
 
-  #panel-timetable .tt-week-slide .tt-card {
-    height: 100%;
-    min-height: 0;
-    transform: none !important;
-    will-change: auto !important;
+  .tt-mobile {
+    display: grid;
+    gap: 0.75rem;
   }
 
-  @media (max-width: 900px) {
-    #panel-timetable .tt-week-scroller,
-    #panel-timetable .tt-week-slide,
-    #panel-timetable .tt-week-slide .tt-card {
-      height: auto;
-    }
+  .tt-mobile-day {
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    background: var(--surface);
   }
 
+  .tt-mobile-day[open] {
+    border-color: var(--border-strong);
+    box-shadow: 0 7px 18px rgb(15 23 42 / 6%);
+  }
+
+  .tt-mobile-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    min-height: 62px;
+    padding: 0.75rem 0.85rem;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .tt-mobile-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .tt-mobile-summary::after {
+    color: var(--text-dim);
+    content: "+";
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+
+  .tt-mobile-day[open] .tt-mobile-summary::after {
+    content: "−";
+  }
+
+  .tt-mobile-day.is-today .tt-mobile-summary {
+    background: var(--ui-accent-soft);
+  }
+
+  .tt-mobile-date {
+    color: var(--text-dim);
+    font-size: 0.74rem;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .tt-mobile-name {
+    margin-top: 0.1rem;
+    color: var(--text);
+    font-size: 1.05rem;
+    font-weight: 900;
+  }
+
+  .tt-mobile-sessions {
+    display: grid;
+    gap: 0.55rem;
+    margin-top: 0;
+    padding: 0 0.75rem 0.75rem;
+    border-top: 1px solid var(--border-light);
+  }
+
+  .tt-mobile .tt-empty {
+    margin-top: 0.65rem;
+  }
+
+  .tt-mobile .tt-session,
+  .tt-mobile .tt-event {
+    min-height: 92px;
+    margin-top: 0.65rem;
+  }
+
+  .tt-mobile .tt-code { font-size: 1rem; }
+  .tt-mobile .tt-module { font-size: 0.78rem; }
+  .tt-mobile .tt-meta span { font-size: 0.72rem; }
+}
+
+@media (max-width: 520px) {
+  .materials-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+/* ---------- Print and motion preferences ---------- */
+@media print {
+  body {
+    padding: 1rem;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .theme-toggle,
+  .cal-nav,
+  .tt-page-nav {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+@supports not (scrollbar-gutter: stable) {
+  html {
+    overflow-y: scroll;
+  }
+}
 </style>
 </head>
 <body>
@@ -2025,34 +1384,28 @@
   <div class="header-top">
     <div class="header-left">
       <h1>BCAD Year 3 Dashboard</h1>
-      <div id="dashboardVersionSub" class="sub">PAS · Coming Soon</div>
     </div>
-    <button class="theme-toggle" type="button" onclick="toggleTheme()" title="Toggle light/dark mode" aria-label="Toggle light and dark mode">
-      <div class="track-icons">
-        <span class="track-sun">☀️</span>
-        <span class="track-moon">🌙</span>
-      </div>
-      <div class="toggle-knob">
-        <svg class="icon-sun" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z"/></svg>
-        <svg class="icon-moon" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 01.818.162z" clip-rule="evenodd"/></svg>
+    <button id="themeToggle" class="theme-toggle" type="button" title="Toggle light/dark mode" aria-label="Use dark mode" aria-pressed="false">
+      <div class="toggle-knob" aria-hidden="true">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="currentColor" focusable="false"><path fill-rule="evenodd" d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 01.818.162z" clip-rule="evenodd"/></svg>
       </div>
     </button>
   </div>
 </div>
 
 
-<nav class="dashboard-tabs" aria-label="Dashboard sections">
-  <button id="tab-pas" class="tab-btn active" type="button" data-tab="pas" aria-selected="true">PAS</button>
-  <button id="tab-timetable" class="tab-btn" type="button" data-tab="timetable" aria-selected="false">Timetable</button>
+<nav class="dashboard-tabs" role="tablist" aria-label="Dashboard sections">
+  <button id="tab-pas" class="tab-btn active" type="button" role="tab" data-tab="pas" aria-controls="panel-pas" aria-selected="true" tabindex="0">PAS</button>
+  <button id="tab-timetable" class="tab-btn" type="button" role="tab" data-tab="timetable" aria-controls="panel-timetable" aria-selected="false" tabindex="-1">Timetable</button>
 </nav>
 
 <main class="dashboard-shell">
-  <section id="panel-pas" class="tab-panel active" aria-labelledby="tab-pas">
+  <section id="panel-pas" class="tab-panel active" role="tabpanel" aria-labelledby="tab-pas" tabindex="0">
     <div class="pas-dashboard">
       <div class="pas-calendar-zone">
         <div class="calendars-wrapper" aria-label="PAS calendar">
-          <button class="cal-nav cal-nav-prev" onclick="scrollCal(-1)" aria-label="Previous month">‹</button>
-          <button class="cal-nav cal-nav-next" onclick="scrollCal(1)" aria-label="Next month">›</button>
+          <button id="calPrev" class="cal-nav cal-nav-prev" type="button" aria-controls="calScroller" aria-label="Previous month">‹</button>
           <div class="calendars" id="calScroller">
     <div class="cal-slide"><div class="cal" data-month="0">
       <div class="cal-title">January <span>2026</span></div>
@@ -2127,32 +1480,28 @@
       </div>
     </div></div>
           </div>
-          <div class="cal-dots" id="calDots" aria-label="Calendar month navigation"></div>
+          <button id="calNext" class="cal-nav cal-nav-next" type="button" aria-controls="calScroller" aria-label="Next month">›</button>
         </div>
+        <div id="calDots" class="cal-dots" aria-label="Calendar month navigation"></div>
       </div>
 
       <div class="pas-lower-grid">
-        <div class="event-list pas-deadlines" aria-label="PAS deadlines">
-          <div class="event-list-header">Deadlines</div>
-          <div class="pas-blank-space" aria-hidden="true"></div>
-        </div>
-
         <div class="materials-section pas-materials">
-          <div class="materials-header">Materials</div>
+          <div class="materials-header">Module materials</div>
           <div class="materials-grid">
-        <a class="mat-link" href="https://advtechonline.sharepoint.com/sites/TertiaryStudents/IIE%20Student%20Materials/Forms/Default%20View.aspx?id=%2Fsites%2FTertiaryStudents%2FIIE%20Student%20Materials%2FNew%20Student%20Materials%20CAT%2FINSY7314%2F2026%2FTerm%202&viewid=db15e059%2D4f93%2D487f%2Dabda%2De538b821c7b8" target="_blank" rel="noopener">
+        <a class="mat-link" href="https://advtechonline.sharepoint.com/sites/TertiaryStudents/IIE%20Student%20Materials/Forms/Default%20View.aspx?id=%2Fsites%2FTertiaryStudents%2FIIE%20Student%20Materials%2FNew%20Student%20Materials%20CAT%2FINSY7314%2F2026%2FTerm%202&viewid=db15e059%2D4f93%2D487f%2Dabda%2De538b821c7b8" target="_blank" rel="noopener noreferrer">
           <div class="mat-dot" style="background:var(--insy7314)"></div>
           <div class="mat-info"><span class="mat-code">INSY7314</span><span class="mat-lecturer">Ebrahim Adam</span></div>
         </a>
-        <a class="mat-link" href="https://advtechonline.sharepoint.com/sites/TertiaryStudents/IIE%20Student%20Materials/Forms/Default%20View.aspx?id=%2Fsites%2FTertiaryStudents%2FIIE%20Student%20Materials%2FNew%20Student%20Materials%20CAT%2FINSY7315%2F2026%2FTerm%201&viewid=db15e059%2D4f93%2D487f%2Dabda%2De538b821c7b8" target="_blank" rel="noopener">
+        <a class="mat-link" href="https://advtechonline.sharepoint.com/sites/TertiaryStudents/IIE%20Student%20Materials/Forms/Default%20View.aspx?id=%2Fsites%2FTertiaryStudents%2FIIE%20Student%20Materials%2FNew%20Student%20Materials%20CAT%2FINSY7315%2F2026%2FTerm%201&viewid=db15e059%2D4f93%2D487f%2Dabda%2De538b821c7b8" target="_blank" rel="noopener noreferrer">
           <div class="mat-dot" style="background:var(--insy7315)"></div>
           <div class="mat-info"><span class="mat-code">INSY7315</span><span class="mat-lecturer">Gareth Grant</span></div>
         </a>
-        <a class="mat-link" href="https://advtechonline.sharepoint.com/sites/TertiaryStudents/IIE%20Student%20Materials/Forms/Default%20View.aspx?id=%2Fsites%2FTertiaryStudents%2FIIE%20Student%20Materials%2FNew%20Student%20Materials%20CAT%2FPROG7312%2F2026%2FTerm%201&viewid=db15e059%2D4f93%2D487f%2Dabda%2De538b821c7b8" target="_blank" rel="noopener">
+        <a class="mat-link" href="https://advtechonline.sharepoint.com/sites/TertiaryStudents/IIE%20Student%20Materials/Forms/Default%20View.aspx?id=%2Fsites%2FTertiaryStudents%2FIIE%20Student%20Materials%2FNew%20Student%20Materials%20CAT%2FPROG7312%2F2026%2FTerm%201&viewid=db15e059%2D4f93%2D487f%2Dabda%2De538b821c7b8" target="_blank" rel="noopener noreferrer">
           <div class="mat-dot" style="background:var(--prog7312)"></div>
           <div class="mat-info"><span class="mat-code">PROG7312</span><span class="mat-lecturer">Denzyl Govender</span></div>
         </a>
-        <a class="mat-link" href="https://advtechonline.sharepoint.com/sites/TertiaryStudents/IIE%20Student%20Materials/Forms/Default%20View.aspx?id=%2Fsites%2FTertiaryStudents%2FIIE%20Student%20Materials%2FNew%20Student%20Materials%20CAT%2FPROG7314%2F2026%2FTerm%202&viewid=db15e059%2D4f93%2D487f%2Dabda%2De538b821c7b8" target="_blank" rel="noopener">
+        <a class="mat-link" href="https://advtechonline.sharepoint.com/sites/TertiaryStudents/IIE%20Student%20Materials/Forms/Default%20View.aspx?id=%2Fsites%2FTertiaryStudents%2FIIE%20Student%20Materials%2FNew%20Student%20Materials%20CAT%2FPROG7314%2F2026%2FTerm%202&viewid=db15e059%2D4f93%2D487f%2Dabda%2De538b821c7b8" target="_blank" rel="noopener noreferrer">
           <div class="mat-dot" style="background:var(--prog7314)"></div>
           <div class="mat-info"><span class="mat-code">PROG7314</span><span class="mat-lecturer">Ebrahim Adam</span></div>
         </a>
@@ -2160,192 +1509,320 @@
         </div>
       </div>
 
-      <div class="footer-link pas-footer">
-        <div class="fl-icon">📋</div>
-        Check <a href="https://advtechonline.sharepoint.com/sites/Emeris/PAS/Forms/AllItems.aspx?id=%2Fsites%2FEmeris%2FPAS%2F2026%2FContact%20Full%20Time%2FFaculty%20of%20Science%20and%20Technology%2FSchool%20of%20Computer%20Science%2FBachelor%20of%20Computer%20and%20Information%20Science%20in%20Application%20Development%20BCAD0701&viewid=7d0c106d%2D7867%2D4ac2%2D84a6%2D782f2662169a&csf=1&CID=a833139f%2D0e51%2D4d4d%2Da457%2D785f3b3f26ba&FolderCTID=0x012000ABD6003807C8E844B9951A17F1456534" target="_blank" rel="noopener">here</a> for the latest PAS
-      </div>
+      <a class="footer-link pas-footer" href="https://advtechonline.sharepoint.com/sites/Emeris/PAS/Forms/AllItems.aspx?id=%2Fsites%2FEmeris%2FPAS%2F2026%2FContact%20Full%20Time%2FFaculty%20of%20Science%20and%20Technology%2FSchool%20of%20Computer%20Science%2FBachelor%20of%20Computer%20and%20Information%20Science%20in%20Application%20Development%20BCAD0701&viewid=7d0c106d%2D7867%2D4ac2%2D84a6%2D782f2662169a&csf=1&CID=a833139f%2D0e51%2D4d4d%2Da457%2D785f3b3f26ba&FolderCTID=0x012000ABD6003807C8E844B9951A17F1456534" target="_blank" rel="noopener noreferrer">
+        <div class="fl-icon" aria-hidden="true">↗</div>
+        <div class="footer-copy"><strong>Open the latest PAS</strong><span>View the official schedule on SharePoint</span></div>
+        <div class="footer-arrow" aria-hidden="true">→</div>
+      </a>
     </div>
   </section>
 
-  <section id="panel-timetable" class="tab-panel" aria-labelledby="tab-timetable">
+  <section id="panel-timetable" class="tab-panel" role="tabpanel" aria-labelledby="tab-timetable" tabindex="0" hidden>
     <div class="timetable-shell">
       <div class="tt-card-wrap">
         <button id="ttPrevWeek" class="tt-page-nav tt-page-nav-prev" type="button" aria-label="Previous timetable week">‹</button>
         <div id="ttWeekScroller" class="tt-week-scroller" aria-label="Weekly timetable carousel"></div>
         <button id="ttNextWeek" class="tt-page-nav tt-page-nav-next" type="button" aria-label="Next timetable week">›</button>
       </div>
+      <a class="footer-link timetable-footer" href="https://advtechonline.sharepoint.com/sites/Emeris/Timetable/Forms/AllItems.aspx?id=%2Fsites%2FEmeris%2FTimetable%2F2026%2FDurban%20North%2FFaculty%20of%20Science%20and%20Technology%2FSchool%20of%20Computer%20Science%2FBachelor%20of%20Computer%20and%20Information%20Science%20in%20Application%20Development%20BCAD0701&amp;viewid=1f54ba53%2Dc00b%2D4529%2Da721%2Da4030a433449&amp;csf=1&amp;CID=5b95a478%2D4532%2D4e1e%2D9a57%2D46c31e08aa55&amp;FolderCTID=0x012000367AF3374754684BA95A7FF798230169" target="_blank" rel="noopener noreferrer">
+        <div class="fl-icon" aria-hidden="true">↗</div>
+        <div class="footer-copy"><strong>Open the latest timetable</strong><span>View the official schedule on SharePoint</span></div>
+        <div class="footer-arrow" aria-hidden="true">→</div>
+      </a>
     </div>
   </section>
 
 </main>
 
 <script>
-  function toggleTheme() {
-    const html = document.documentElement;
-    const current = html.getAttribute('data-theme');
-    const next = current === 'light' ? 'dark' : 'light';
-    html.setAttribute('data-theme', next);
-    localStorage.setItem('bcad-theme', next);
+(() => {
+  "use strict";
+
+  if ("scrollRestoration" in window.history) {
+    window.history.scrollRestoration = "manual";
   }
 
-  // Load saved preference
-  const saved = localStorage.getItem('bcad-theme');
-  if (saved) document.documentElement.setAttribute('data-theme', saved);
+  const THEME_KEY = "bcad-theme";
+  const root = document.documentElement;
+  const themeToggle = document.getElementById("themeToggle");
 
-  // Calendar horizontal scroll navigation
-  (function() {
-    const scroller = document.getElementById('calScroller');
-    const dotsContainer = document.getElementById('calDots');
-
-    if (!scroller || !dotsContainer) {
-      window.scrollCal = function() {};
-      return;
+  function readStoredTheme() {
+    try {
+      const value = window.localStorage.getItem(THEME_KEY);
+      return value === "light" || value === "dark" ? value : null;
+    } catch {
+      return null;
     }
+  }
 
-    const slides = scroller.querySelectorAll('.cal-slide');
-    if (!slides.length) return;
-    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const START_MONTH = 0; // January
-
-    function getSlideWidth() {
-      return slides[0].offsetWidth + parseFloat(getComputedStyle(scroller).gap || 0);
+  function storeTheme(theme) {
+    try {
+      window.localStorage.setItem(THEME_KEY, theme);
+    } catch {
+      // Storage may be unavailable in private or restricted browsing modes.
     }
+  }
 
-    function getActiveIdx() {
-      return Math.round(scroller.scrollLeft / getSlideWidth());
+  function getPreferredTheme() {
+    const storedTheme = readStoredTheme();
+    if (storedTheme) return storedTheme;
+    return window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+
+  function applyTheme(theme) {
+    const isDark = theme === "dark";
+    root.dataset.theme = isDark ? "dark" : "light";
+
+    if (themeToggle) {
+      themeToggle.setAttribute("aria-pressed", String(isDark));
+      themeToggle.setAttribute("aria-label", isDark ? "Use light mode" : "Use dark mode");
+      themeToggle.title = isDark ? "Use light mode" : "Use dark mode";
     }
+  }
 
-    function getMonthIdx(month) {
-      return Math.max(0, Math.min(slides.length - 1, month - START_MONTH));
-    }
+  applyTheme(getPreferredTheme());
 
-    // Build dots
-    slides.forEach(function(_, i) {
-      var dot = document.createElement('div');
-      dot.className = 'cal-dot';
-      dot.title = monthNames[i];
-      dot.addEventListener('click', function() {
-        scroller.scrollTo({ left: i * getSlideWidth(), behavior: 'smooth' });
-      });
-      dotsContainer.appendChild(dot);
+  themeToggle?.addEventListener("click", () => {
+    const nextTheme = root.dataset.theme === "dark" ? "light" : "dark";
+    applyTheme(nextTheme);
+    storeTheme(nextTheme);
+  });
+
+  const systemTheme = window.matchMedia?.("(prefers-color-scheme: dark)");
+  systemTheme?.addEventListener?.("change", (event) => {
+    if (!readStoredTheme()) applyTheme(event.matches ? "dark" : "light");
+  });
+
+  const scroller = document.getElementById("calScroller");
+  const dotsContainer = document.getElementById("calDots");
+  const previousButton = document.getElementById("calPrev");
+  const nextButton = document.getElementById("calNext");
+
+  if (!scroller || !dotsContainer || !previousButton || !nextButton) return;
+
+  const slides = Array.from(scroller.querySelectorAll(".cal-slide"));
+  if (slides.length === 0) return;
+
+  const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const calendarYear = 2026;
+  const pasModuleMeta = {
+    INSY7314: { name: "Information Systems 3D", lecturer: "Ebrahim" },
+    INSY7315: { name: "Information Systems 3E", lecturer: "Gareth" },
+    PROG7312: { name: "Programming 3B", lecturer: "Denzyl" },
+    PROG7314: { name: "Programming 3D", lecturer: "Ebrahim" }
+  };
+
+  // Confirmed Term 2 assessment dates from PAS Version 1 (10 July 2026).
+  // ICE, resubmission and TBC-only entries are intentionally excluded.
+  const pasAssignments = [
+    { date: "2026-08-17", module: "INSY7315", title: "Task 1", time: "23:59" },
+    { date: "2026-08-24", module: "PROG7314", title: "Part 1", time: "23:59" },
+    { date: "2026-09-07", module: "INSY7314", title: "Part 1", time: "23:59" },
+    { date: "2026-09-14", module: "PROG7312", title: "Part 1", time: "23:59" },
+    { date: "2026-09-22", module: "PROG7314", title: "Part 2", time: "TBC" },
+    { date: "2026-09-28", module: "INSY7315", title: "Task 2", time: "23:59" },
+    { date: "2026-10-05", module: "INSY7314", title: "Part 2", time: "23:59" },
+    { date: "2026-10-12", module: "PROG7312", title: "Part 2", time: "23:59" }
+  ];
+
+  const validPasAssignments = pasAssignments
+    .filter((assignment) => /^2026-\d{2}-\d{2}$/.test(assignment.date) && pasModuleMeta[assignment.module])
+    .sort((left, right) => left.date.localeCompare(right.date));
+
+  slides.forEach((_, index) => {
+    const dot = document.createElement("button");
+    dot.type = "button";
+    dot.className = "cal-dot";
+    dot.setAttribute("aria-label", `Show ${monthNames[index]} ${calendarYear}`);
+    dot.addEventListener("click", () => scrollToIndex(index));
+    dotsContainer.appendChild(dot);
+  });
+
+  const navigationDots = Array.from(dotsContainer.querySelectorAll(".cal-dot"));
+
+  let scrollFrame = 0;
+  let resizeTimer = 0;
+  let currentCalendarIndex = new Date().getMonth();
+
+  function getSlideWidth() {
+    const gap = Number.parseFloat(getComputedStyle(scroller).gap) || 0;
+    return slides[0].getBoundingClientRect().width + gap;
+  }
+
+  function getMaxIndex() {
+    return Math.max(0, slides.length - getVisibleCount());
+  }
+
+  function getVisibleCount() {
+    const slideWidth = getSlideWidth();
+    return slideWidth ? Math.max(1, Math.round(scroller.clientWidth / slideWidth)) : 1;
+  }
+
+  function clampIndex(index) {
+    return Math.max(0, Math.min(getMaxIndex(), index));
+  }
+
+  function clampMonthIndex(index) {
+    return Math.max(0, Math.min(slides.length - 1, index));
+  }
+
+  function getActiveIndex() {
+    let closestIndex = 0;
+    let closestDistance = Number.POSITIVE_INFINITY;
+    slides.forEach((slide, index) => {
+      const slideOffset = slide.offsetLeft - slides[0].offsetLeft;
+      const distance = Math.abs(scroller.scrollLeft - slideOffset);
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestIndex = index;
+      }
+    });
+    return clampIndex(closestIndex);
+  }
+
+  function renderCalendarControls(index) {
+    const activeIndex = clampMonthIndex(index);
+    const startIndex = clampIndex(activeIndex);
+    const endIndex = Math.min(slides.length - 1, startIndex + getVisibleCount() - 1);
+    const rangeText = startIndex === endIndex
+      ? `${monthNames[startIndex]} ${calendarYear}`
+      : `${monthNames[startIndex]} – ${monthNames[endIndex]} ${calendarYear}`;
+    currentCalendarIndex = activeIndex;
+    scroller.setAttribute("aria-label", `PAS calendar showing ${rangeText}`);
+    navigationDots.forEach((dot, dotIndex) => {
+      const isActive = dotIndex === activeIndex;
+      dot.classList.toggle("active", isActive);
+      dot.setAttribute("aria-pressed", String(isActive));
+      if (isActive) dot.setAttribute("aria-current", "true");
+      else dot.removeAttribute("aria-current");
+    });
+    previousButton.disabled = activeIndex <= 0;
+    nextButton.disabled = activeIndex >= slides.length - 1;
+  }
+
+  function scrollToIndex(index, behavior = "smooth") {
+    const targetMonthIndex = clampMonthIndex(index);
+    const targetScrollIndex = clampIndex(targetMonthIndex);
+    const targetOffset = slides[targetScrollIndex].offsetLeft - slides[0].offsetLeft;
+    renderCalendarControls(targetMonthIndex);
+    scroller.scrollTo({ left: targetOffset, behavior });
+    requestAnimationFrame(updateCalendarControls);
+  }
+
+  function updateCalendarControls() {
+    cancelAnimationFrame(scrollFrame);
+    scrollFrame = requestAnimationFrame(() => {
+      const visibleStart = getActiveIndex();
+      const visibleEnd = Math.min(slides.length - 1, visibleStart + getVisibleCount() - 1);
+      const focusedMonth = currentCalendarIndex >= visibleStart && currentCalendarIndex <= visibleEnd
+        ? currentCalendarIndex
+        : visibleStart;
+      renderCalendarControls(focusedMonth);
+    });
+  }
+
+  previousButton.addEventListener("click", () => scrollToIndex(currentCalendarIndex - 1));
+  nextButton.addEventListener("click", () => scrollToIndex(currentCalendarIndex + 1));
+  scroller.addEventListener("scroll", updateCalendarControls, { passive: true });
+  window.addEventListener("resize", () => {
+    window.clearTimeout(resizeTimer);
+    resizeTimer = window.setTimeout(() => {
+      scrollToIndex(currentCalendarIndex, "auto");
+      updateCalendarControls();
+    }, 120);
+  }, { passive: true });
+
+  function markToday() {
+    scroller.querySelectorAll(".cal-day.today").forEach((cell) => {
+      cell.classList.remove("today");
+      cell.removeAttribute("aria-current");
     });
 
-    var dots = dotsContainer.querySelectorAll('.cal-dot');
+    const today = new Date();
+    if (today.getFullYear() !== calendarYear) return;
 
-    // Debounced dot updater
-    var scrollRaf = 0;
-    function updateDots() {
-      cancelAnimationFrame(scrollRaf);
-      scrollRaf = requestAnimationFrame(function() {
-        var idx = getActiveIdx();
-        dots.forEach(function(d, i) { d.classList.toggle('active', i === idx); });
+    const calendar = scroller.querySelector(`.cal[data-month="${today.getMonth()}"]`);
+    calendar?.querySelectorAll(".cal-day:not(.empty)").forEach((cell) => {
+      if (Number.parseInt(cell.textContent, 10) === today.getDate()) {
+        cell.classList.add("today");
+        cell.setAttribute("aria-current", "date");
+      }
+    });
+  }
+
+  function renderPasAssignments() {
+    const assignmentsByDate = new Map();
+    validPasAssignments.forEach((assignment) => {
+      if (!assignmentsByDate.has(assignment.date)) assignmentsByDate.set(assignment.date, []);
+      assignmentsByDate.get(assignment.date).push(assignment);
+    });
+
+    assignmentsByDate.forEach((assignments, isoDate) => {
+      const date = new Date(`${isoDate}T12:00:00`);
+      const calendar = scroller.querySelector(`.cal[data-month="${date.getMonth()}"]`);
+      const cell = Array.from(calendar?.querySelectorAll(".cal-day:not(.empty)") || [])
+        .find((candidate) => Number.parseInt(candidate.textContent, 10) === date.getDate());
+      if (!cell) return;
+
+      const primaryModule = assignments[0].module;
+      cell.classList.add("has-event", `event-${primaryModule}`);
+      cell.tabIndex = 0;
+      cell.setAttribute("aria-label", `${date.getDate()} ${monthNames[date.getMonth()]}. ${assignments.map((assignment) => `${assignment.title}, ${assignment.module}, ${pasModuleMeta[assignment.module].lecturer}`).join("; ")}`);
+
+      const tooltip = document.createElement("span");
+      tooltip.className = "tip";
+      tooltip.appendChild(document.createTextNode(assignments.map((assignment) => assignment.title).join(" · ")));
+      const tooltipMeta = document.createElement("span");
+      tooltipMeta.className = "tip-lecturer";
+      tooltipMeta.textContent = ` · ${assignments.map((assignment) => `${assignment.module} · ${pasModuleMeta[assignment.module].lecturer}`).join(", ")}`;
+      tooltip.appendChild(tooltipMeta);
+
+      cell.append(tooltip);
+    });
+  }
+
+  function markPast() {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    scroller.querySelectorAll(".cal").forEach((calendar) => {
+      const month = Number.parseInt(calendar.dataset.month, 10);
+      calendar.querySelectorAll(".cal-day:not(.empty)").forEach((cell) => {
+        const day = Number.parseInt(cell.textContent, 10);
+        const cellDate = new Date(calendarYear, month, day);
+        cell.classList.toggle("past", cellDate < today);
       });
-    }
+    });
 
-    scroller.addEventListener('scroll', updateDots, { passive: true });
+  }
 
-    // Arrow navigation
-    window.scrollCal = function(dir) {
-      scroller.scrollBy({ left: dir * getSlideWidth(), behavior: 'smooth' });
-    };
-
-    // Scroll to current month on load
-    var targetIdx = getMonthIdx(new Date().getMonth());
-    setTimeout(function() {
-      scroller.scrollLeft = targetIdx * getSlideWidth();
-      updateDots();
-    }, 100);
-
-    // Mark today's date
-    function markToday() {
-      document.querySelectorAll('.cal-day.today').forEach(function(el) {
-        el.classList.remove('today');
-      });
-
-      var today = new Date();
-      var month = today.getMonth();
-      var day = today.getDate();
-
-      var cal = scroller.querySelector('.cal[data-month="' + month + '"]');
-      if (!cal) return;
-
-      cal.querySelectorAll('.cal-day:not(.empty)').forEach(function(cell) {
-        if (parseInt(cell.childNodes[0].textContent, 10) === day) {
-          cell.classList.add('today');
-        }
-      });
-    }
-
+  function refreshCalendar() {
     markToday();
-
-    // Grey out past days and events
-    function markPast() {
-      var today = new Date();
-      today.setHours(0, 0, 0, 0);
-      var todayMonth = today.getMonth();
-      var todayDate = today.getDate();
-
-      // Calendar days
-      scroller.querySelectorAll('.cal').forEach(function(cal) {
-        var month = parseInt(cal.getAttribute('data-month'), 10);
-        cal.querySelectorAll('.cal-day:not(.empty)').forEach(function(cell) {
-          var day = parseInt(cell.childNodes[0].textContent, 10);
-          if (month < todayMonth || (month === todayMonth && day < todayDate)) {
-            cell.classList.add('past');
-          } else {
-            cell.classList.remove('past');
-          }
-        });
-      });
-
-      // Event rows
-      document.querySelectorAll('.ev-row[data-date]').forEach(function(row) {
-        var d = new Date(row.getAttribute('data-date') + 'T00:00:00');
-        if (d < today) {
-          row.classList.add('past');
-        } else {
-          row.classList.remove('past');
-        }
-      });
-
-      // Month group labels — grey out if ALL sibling ev-rows until next label are past
-      document.querySelectorAll('.month-group-label[data-month]').forEach(function(label) {
-        var next = label.nextElementSibling;
-        var allPast = true;
-        var hasRows = false;
-        while (next && !next.classList.contains('month-group-label')) {
-          if (next.classList.contains('ev-row')) {
-            hasRows = true;
-            if (!next.classList.contains('past')) { allPast = false; break; }
-          }
-          next = next.nextElementSibling;
-        }
-        if (hasRows && allPast) {
-          label.classList.add('past');
-        } else {
-          label.classList.remove('past');
-        }
-      });
-    }
-
     markPast();
+  }
 
-    // Schedule update at midnight
-    function scheduleNextMidnight() {
-      var now = new Date();
-      var midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
-      setTimeout(function() {
-        markToday();
-        markPast();
-        var newIdx = getMonthIdx(new Date().getMonth());
-        if (newIdx !== getActiveIdx()) {
-          scroller.scrollTo({ left: newIdx * getSlideWidth(), behavior: 'smooth' });
-        }
-        scheduleNextMidnight();
-      }, midnight - now + 500);
-    }
-    scheduleNextMidnight();
-  })();
+  function scheduleMidnightRefresh() {
+    const now = new Date();
+    const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+    window.setTimeout(() => {
+      refreshCalendar();
+      scrollToIndex(new Date().getMonth(), "smooth");
+      scheduleMidnightRefresh();
+    }, midnight.getTime() - now.getTime() + 500);
+  }
+
+  renderPasAssignments();
+  refreshCalendar();
+  requestAnimationFrame(() => {
+    scrollToIndex(new Date().getMonth(), "auto");
+    updateCalendarControls();
+  });
+  window.addEventListener("pageshow", () => {
+    scrollToIndex(new Date().getMonth(), "auto");
+    updateCalendarControls();
+  });
+  scheduleMidnightRefresh();
+})();
 </script>
 
 
@@ -2354,11 +1831,6 @@
   (function() {
     const tabButtons = document.querySelectorAll('.tab-btn');
     const panels = document.querySelectorAll('.tab-panel');
-    const dashboardVersionSub = document.getElementById('dashboardVersionSub');
-    const tabSubtitles = {
-      pas: 'PAS · Coming Soon',
-      timetable: 'Timetable · Latest version · 6 July 2026'
-    };
 
     function getVerticalSpace(element) {
       if (!element) return 0;
@@ -2384,13 +1856,13 @@
         const isActive = button.dataset.tab === name;
         button.classList.toggle('active', isActive);
         button.setAttribute('aria-selected', String(isActive));
+        button.tabIndex = isActive ? 0 : -1;
       });
       panels.forEach(function(panel) {
-        panel.classList.toggle('active', panel.id === 'panel-' + name);
+        const isActive = panel.id === 'panel-' + name;
+        panel.classList.toggle('active', isActive);
+        panel.hidden = !isActive;
       });
-      if (dashboardVersionSub && tabSubtitles[name]) {
-        dashboardVersionSub.textContent = tabSubtitles[name];
-      }
       requestAnimationFrame(function() {
         fitDashboardPanels();
         if (name === 'timetable' && typeof window.syncTimetableCarousel === 'function') {
@@ -2406,9 +1878,25 @@
       button.addEventListener('click', function() {
         setActiveTab(button.dataset.tab);
       });
+
+      button.addEventListener('keydown', function(event) {
+        if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight' && event.key !== 'Home' && event.key !== 'End') return;
+
+        event.preventDefault();
+        const currentIndex = Array.from(tabButtons).indexOf(button);
+        let nextIndex = currentIndex;
+
+        if (event.key === 'ArrowLeft') nextIndex = (currentIndex - 1 + tabButtons.length) % tabButtons.length;
+        if (event.key === 'ArrowRight') nextIndex = (currentIndex + 1) % tabButtons.length;
+        if (event.key === 'Home') nextIndex = 0;
+        if (event.key === 'End') nextIndex = tabButtons.length - 1;
+
+        const nextButton = tabButtons[nextIndex];
+        setActiveTab(nextButton.dataset.tab);
+        nextButton.focus();
+      });
     });
 
-    localStorage.removeItem('bcad-active-tab');
     setActiveTab('pas');
   })();
 
@@ -2472,16 +1960,12 @@
     function s2WeekWithTuesdayNoThursday() {
       return { Monday: clone(s2MondayCore), Tuesday: clone(s2TuesdayProg), Wednesday: clone(s2WednesdayAfternoon), Thursday: [], Friday: clone(s2FridayCore) };
     }
-    function s2AssessmentEmpty() {
-      return { Monday: eventDay('ASSESSMENT WEEK', 'assessment'), Tuesday: eventDay('ASSESSMENT WEEK', 'assessment'), Wednesday: eventDay('ASSESSMENT WEEK', 'assessment'), Thursday: eventDay('ASSESSMENT WEEK', 'assessment'), Friday: eventDay('ASSESSMENT WEEK', 'assessment') };
-    }
-
     const weeks = [
       week('Academic Week 1', '13 Jul - 17 Jul', '2026-07-13', 'academic', s2WeekWithTuesdayAndThursday()),
       week('Academic Week 2', '20 Jul - 24 Jul', '2026-07-20', 'academic', s2WeekWithTuesdayInsy()),
-      week('Academic Week 3', '27 Jul - 31 Jul', '2026-07-27', 'academic', s2WeekWithTuesdayAndThursday()),
-      week('Academic Week 4', '3 Aug - 7 Aug', '2026-08-03', 'academic', s2WeekWithThursdayInsy()),
-      week('Academic Week 5', '10 Aug - 14 Aug', '2026-08-10', 'academic', {
+      week('Academic Week 3 FP1', '27 Jul - 31 Jul', '2026-07-27', 'academic', s2WeekWithTuesdayAndThursday()),
+      week('Academic Week 4 FP2', '3 Aug - 7 Aug', '2026-08-03', 'academic', s2WeekWithThursdayInsy()),
+      week('Academic Week 5 FP3', '10 Aug - 14 Aug', '2026-08-10', 'academic', {
         Monday: eventDay("WOMEN'S DAY", 'holiday'),
         Tuesday: clone(s2TuesdayProg),
         Wednesday: clone(s2WednesdayAfternoon),
@@ -2493,31 +1977,31 @@
         Tuesday: eventDay('CATCH UP WEEK', 'catchup'),
         Wednesday: eventDay('CATCH UP WEEK', 'catchup'),
         Thursday: eventDay('CATCH UP WEEK', 'catchup'),
-        Friday: eventDay('CATCH UP WEEK', 'catchup')
+        Friday: []
       }),
       week('Academic Week 6', '24 Aug - 28 Aug', '2026-08-24', 'academic', s2WeekWithThursdayInsy()),
-      week('Academic Week 7', '31 Aug - 4 Sep', '2026-08-31', 'academic', s2WeekWithTuesdayNoThursday()),
-      week('Academic Week 8', '7 Sep - 11 Sep', '2026-09-07', 'academic', {
+      week('Academic Week 7 FP4', '31 Aug - 4 Sep', '2026-08-31', 'academic', s2WeekWithTuesdayNoThursday()),
+      week('Academic Week 8 FP5', '7 Sep - 11 Sep', '2026-09-07', 'academic', {
         Monday: clone(s2MondayCore),
         Tuesday: [],
         Wednesday: clone(s2WednesdayAfternoon),
         Thursday: clone(s2ThursdayInsyAndProg),
         Friday: clone(s2FridayCore)
       }),
-      week('Academic Week 9', '14 Sep - 18 Sep', '2026-09-14', 'academic', s2WeekWithTuesdayNoThursday()),
+      week('Academic Week 9 FP6', '14 Sep - 18 Sep', '2026-09-14', 'academic', s2WeekWithTuesdayNoThursday()),
       week('Assess Week', '21 Sep - 25 Sep', '2026-09-21', 'assessment', {
         Monday: clone(s2MondayCore),
         Tuesday: eventDay('TEST WEEK 2', 'assessment'),
         Wednesday: eventDay('TEST WEEK 2', 'assessment'),
         Thursday: eventDay('TEST WEEK 2', 'assessment'),
-        Friday: eventDay('TEST WEEK 2', 'assessment')
+        Friday: []
       }),
       week('Assess Week', '28 Sep - 2 Oct', '2026-09-28', 'assessment', {
         Monday: eventDay('TEST WEEK 2', 'assessment'),
         Tuesday: eventDay('TEST WEEK 2', 'assessment'),
         Wednesday: eventDay('TEST WEEK 2', 'assessment'),
         Thursday: eventDay('TEST WEEK 2', 'assessment'),
-        Friday: eventDay('TEST WEEK 2', 'assessment')
+        Friday: []
       }),
       week('Academic Week 10', '5 Oct - 9 Oct', '2026-10-05', 'academic', {
         Monday: clone(s2MondayCore),
@@ -2534,7 +2018,13 @@
         Thursday: clone(s2ThursdayInsyAndProg),
         Friday: clone(s2FridayCore)
       }),
-      week('Assessment Week', '26 Oct - 30 Oct', '2026-10-26', 'assessment', s2AssessmentEmpty())
+      week('Assessment Week', '26 Oct - 30 Oct', '2026-10-26', 'assessment', {
+        Monday: eventDay('ASSESSMENT WEEK', 'assessment'),
+        Tuesday: eventDay('ASSESSMENT WEEK', 'assessment'),
+        Wednesday: eventDay('ASSESSMENT WEEK', 'assessment'),
+        Thursday: eventDay('ASSESSMENT WEEK', 'assessment'),
+        Friday: []
+      })
     ];
 
     let currentWeekIndex = getAutoWeekIndex();
@@ -2544,13 +2034,38 @@
     const nextBtn = document.getElementById('ttNextWeek');
     let scrollRaf = 0;
 
+    if (!scroller || !prevBtn || !nextBtn) return;
+
     function parseDate(iso) { return new Date(iso + 'T12:00:00'); }
     function getWeekdayLabel(weekStart, offset) {
       const date = parseDate(weekStart);
       date.setDate(date.getDate() + offset);
       return date.getDate() + ' ' + monthNames[date.getMonth()];
     }
+    function getWeekdayDate(weekStart, offset) {
+      const date = parseDate(weekStart);
+      date.setDate(date.getDate() + offset);
+      return date;
+    }
+    function isToday(weekStart, offset) {
+      const date = getWeekdayDate(weekStart, offset);
+      const today = new Date();
+      return date.getFullYear() === today.getFullYear() &&
+        date.getMonth() === today.getMonth() &&
+        date.getDate() === today.getDate();
+    }
     function isSessionArray(value) { return Array.isArray(value); }
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>'"]/g, function(character) {
+        return {
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          "'": '&#39;',
+          '"': '&quot;'
+        }[character];
+      });
+    }
     function clampWeekIndex(index) {
       return Math.max(0, Math.min(weeks.length - 1, index));
     }
@@ -2576,70 +2091,79 @@
       return startSlot.start + ' - ' + endSlot.end;
     }
     function renderSession(item) {
-      const info = modulesInfo[item.code];
-      return '<div class="tt-session mod-' + item.code + '">' +
-        '<div class="tt-code">' + item.code + '</div>' +
-        '<div class="tt-module">' + info.name + ' · ' + info.lecturer + '</div>' +
-        '<div class="tt-meta"><span>' + getRangeLabel(item.start, item.end) + '</span><span>' + item.venue + '</span></div>' +
+      const info = modulesInfo[item.code] || { name: 'Unknown module', lecturer: 'Lecturer unavailable' };
+      const safeCode = Object.prototype.hasOwnProperty.call(modulesInfo, item.code) ? item.code : '';
+      return '<div class="tt-session mod-' + safeCode + '">' +
+        '<div class="tt-code">' + escapeHtml(item.code) + '</div>' +
+        '<div class="tt-module">' + escapeHtml(info.name) + ' · ' + escapeHtml(info.lecturer) + '</div>' +
+        '<div class="tt-meta"><span>' + escapeHtml(getRangeLabel(item.start, item.end)) + '</span><span>' + escapeHtml(item.venue) + '</span></div>' +
       '</div>';
     }
     function renderEvent(event) {
-      return '<div class="tt-event ' + (event.variant || 'default') + '">' + event.label + '</div>';
+      const allowedVariants = ['assessment', 'catchup', 'poe', 'break', 'holiday'];
+      const variant = allowedVariants.includes(event.variant) ? event.variant : 'catchup';
+      return '<div class="tt-event ' + variant + '">' + escapeHtml(event.label) + '</div>';
     }
     function buildGridHtml(weekObj) {
       let html = '';
       html += '<div class="tt-time-head" style="grid-column:1;grid-row:1;">Time</div>';
       dayNames.forEach(function(day, dayIndex) {
-        html += '<div class="tt-day-head" style="grid-column:' + (dayIndex + 2) + ';grid-row:1;">' +
-          '<div><div class="tt-day-date">' + getWeekdayLabel(weekObj.weekStart, dayIndex) + '</div><div class="tt-day-name">' + day + '</div></div>' +
+        const todayColumn = isToday(weekObj.weekStart, dayIndex);
+        html += '<div class="tt-day-head' + (todayColumn ? ' today-column' : '') + '" style="grid-column:' + (dayIndex + 2) + ';grid-row:1;">' +
+          '<div><div class="tt-day-date">' + escapeHtml(getWeekdayLabel(weekObj.weekStart, dayIndex)) + '</div><div class="tt-day-name">' + escapeHtml(day) + '</div></div>' +
         '</div>';
       });
       slotMeta.forEach(function(slot, rowIndex) {
         const row = rowIndex + 2;
-        html += '<div class="tt-time-cell" style="grid-column:1;grid-row:' + row + ';">' + slot.start + '</div>';
+        html += '<div class="tt-time-cell" style="grid-column:1;grid-row:' + row + ';">' + escapeHtml(slot.start) + '</div>';
         dayNames.forEach(function(day, dayIndex) {
           const lunch = slot.key === '12:00';
-          html += '<div class="tt-bg-cell ' + (lunch ? 'lunch' : '') + '" style="grid-column:' + (dayIndex + 2) + ';grid-row:' + row + ';">' +
+          const todayColumn = isToday(weekObj.weekStart, dayIndex);
+          html += '<div class="tt-bg-cell' + (lunch ? ' lunch' : '') + (todayColumn ? ' today-column' : '') + '" style="grid-column:' + (dayIndex + 2) + ';grid-row:' + row + ';">' +
             (lunch && day === 'Wednesday' ? '<div class="tt-lunch-label">Lunch</div>' : '') +
           '</div>';
         });
       });
       dayNames.forEach(function(day, dayIndex) {
         const dayData = weekObj.days[day];
+        const todayColumnClass = isToday(weekObj.weekStart, dayIndex) ? ' today-column' : '';
         if (!isSessionArray(dayData)) {
-          html += '<div class="tt-item" style="grid-column:' + (dayIndex + 2) + ';grid-row:2 / span 9;">' + renderEvent(dayData) + '</div>';
+          html += '<div class="tt-item' + todayColumnClass + '" style="grid-column:' + (dayIndex + 2) + ';grid-row:2 / span 9;">' + renderEvent(dayData) + '</div>';
           return;
         }
         dayData.forEach(function(item) {
+          if (!(item.start in slotIndex) || !(item.end in slotIndex) || slotIndex[item.end] < slotIndex[item.start]) return;
           const rowStart = slotIndex[item.start] + 2;
           const rowSpan = slotIndex[item.end] - slotIndex[item.start] + 1;
-          html += '<div class="tt-item" style="grid-column:' + (dayIndex + 2) + ';grid-row:' + rowStart + ' / span ' + rowSpan + ';">' + renderSession(item) + '</div>';
+          html += '<div class="tt-item' + todayColumnClass + '" style="grid-column:' + (dayIndex + 2) + ';grid-row:' + rowStart + ' / span ' + rowSpan + ';">' + renderSession(item) + '</div>';
         });
       });
       return html;
     }
     function buildMobileHtml(weekObj) {
+      const weekContainsToday = dayNames.some(function(_, dayIndex) { return isToday(weekObj.weekStart, dayIndex); });
       return dayNames.map(function(day, dayIndex) {
         const dayData = weekObj.days[day];
+        const todayDay = isToday(weekObj.weekStart, dayIndex);
+        const openByDefault = todayDay || (!weekContainsToday && weeks[currentWeekIndex] === weekObj && dayIndex === 0);
         let body = '';
         if (!isSessionArray(dayData)) body = renderEvent(dayData);
         else if (dayData.length === 0) body = '<div class="tt-empty">No classes scheduled</div>';
         else body = dayData.map(renderSession).join('');
-        return '<div class="tt-mobile-day">' +
-          '<div class="tt-mobile-date">' + getWeekdayLabel(weekObj.weekStart, dayIndex) + '</div>' +
-          '<div class="tt-mobile-name">' + day + '</div>' +
+        return '<details class="tt-mobile-day' + (todayDay ? ' is-today' : '') + '"' + (openByDefault ? ' open' : '') + '>' +
+          '<summary class="tt-mobile-summary"><div>' +
+          '<div class="tt-mobile-date">' + escapeHtml(getWeekdayLabel(weekObj.weekStart, dayIndex)) + '</div>' +
+          '<div class="tt-mobile-name">' + escapeHtml(day) + '</div></div></summary>' +
           '<div class="tt-mobile-sessions">' + body + '</div>' +
-        '</div>';
+        '</details>';
       }).join('');
     }
     function buildWeekSlide(weekObj, index) {
       return '<div class="tt-week-slide" data-week-index="' + index + '">' +
         '<div class="tt-card">' +
-          '<div class="tt-card-head tt-card-head-simple">' +
-            '<div class="tt-week-title">' + weekObj.title + '</div>' +
-          '</div>' +
-          '<div class="tt-grid" aria-label="' + weekObj.title + ' weekly timetable grid">' + buildGridHtml(weekObj) + '</div>' +
-          '<div class="tt-mobile" aria-label="' + weekObj.title + ' weekly timetable mobile list">' + buildMobileHtml(weekObj) + '</div>' +
+          '<div class="tt-card-head"><h2 class="tt-week-title">' + escapeHtml(weekObj.title) + '</h2></div>' +
+          '<div class="tt-grid" aria-label="' + escapeHtml(weekObj.title) + ' weekly timetable grid">' + buildGridHtml(weekObj) + '</div>' +
+          '<div class="tt-mobile" aria-label="' + escapeHtml(weekObj.title) + ' weekly timetable mobile list">' + buildMobileHtml(weekObj) + '</div>' +
         '</div>' +
       '</div>';
     }
@@ -2650,7 +2174,6 @@
       return slide.offsetWidth + gap || scroller.clientWidth || 1;
     }
     function updateControls() {
-      if (!prevBtn || !nextBtn) return;
       prevBtn.disabled = currentWeekIndex <= 0;
       nextBtn.disabled = currentWeekIndex >= weeks.length - 1;
     }
@@ -2676,7 +2199,6 @@
       });
     }
     function renderAllWeeks() {
-      if (!scroller) return;
       scroller.innerHTML = weeks.map(buildWeekSlide).join('');
       requestAnimationFrame(function() {
         scrollToWeek(currentWeekIndex, 'auto');
@@ -2719,7 +2241,8 @@
       const now = new Date();
       const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
       setTimeout(function() {
-        syncToAutoWeek();
+        currentWeekIndex = getAutoWeekIndex();
+        renderAllWeeks();
         scheduleTimetableAutoUpdate();
       }, midnight - now + 500);
     }
@@ -2729,6 +2252,13 @@
         scrollToWeek(currentWeekIndex, 'auto');
       });
     };
+
+    window.addEventListener('pageshow', function() {
+      currentWeekIndex = getAutoWeekIndex();
+      requestAnimationFrame(function() {
+        scrollToWeek(currentWeekIndex, 'auto');
+      });
+    });
 
     window.addEventListener('resize', function() {
       window.clearTimeout(window.__ttResizeTimer);
