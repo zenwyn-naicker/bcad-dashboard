@@ -2141,21 +2141,21 @@ a:focus-visible {
     function session(start, end, code, venue) {
       return { start: start, end: end, code: code, venue: venue };
     }
-    function eventDay(label, variant) {
+    function eventDay(label, variant, start, end) {
       return {
         label: label,
         variant: variant || 'catchup',
-        start: '08:00',
-        end: '16:00'
+        start: start || '08:00',
+        end: end || '16:00'
       };
     }
-    function eventWeek(label, variant) {
+    function eventWeek(label, variant, start, end) {
       return Object.fromEntries(dayNames.map(function(day) {
-        return [day, eventDay(label, variant)];
+        return [day, eventDay(label, variant, start, end)];
       }));
     }
-    function eventDaysWithClasses(label, variant, classDays) {
-      const days = eventWeek(label, variant);
+    function eventDaysWithClasses(label, variant, classDays, start, end) {
+      const days = eventWeek(label, variant, start, end);
       Object.entries(classDays).forEach(function(entry) {
         days[entry[0]] = entry[1];
       });
@@ -2169,121 +2169,148 @@ a:focus-visible {
     }
 
     function buildGroupOneWeeks() {
-      const mondayCore = [session('08:00', '09:00', 'PROG7314', 'CR3'), session('10:00', '11:00', 'INSY7314', 'CR3')];
-      const tuesdayProg = [session('08:00', '09:00', 'PROG7312', 'CR3')];
-      const tuesdayProgAndInsy = [session('08:00', '09:00', 'PROG7312', 'CR3'), session('10:00', '11:00', 'INSY7315', 'CR3')];
-      const wednesdayAfternoon = [session('13:00', '14:00', 'PROG7314', 'CR4'), session('15:00', '16:00', 'INSY7314', 'CR4')];
-      const thursdayProg = [session('10:00', '11:00', 'PROG7312', 'CR3')];
-      const thursdayInsyAndProg = [session('08:00', '09:00', 'INSY7315', 'CR3'), session('10:00', '11:00', 'PROG7312', 'CR3')];
-      const fridayCore = [session('08:00', '09:00', 'PROG7314', 'CR3'), session('10:00', '11:00', 'PROG7312', 'CR3')];
+      const mondayCore = [
+        session('08:00', '09:00', 'PROG7314', 'CR3'),
+        session('10:00', '11:00', 'INSY7314', 'CR3')
+      ];
+      const tuesdayProg = [
+        session('08:00', '09:00', 'PROG7312', 'CR3')
+      ];
+      const tuesdayProgAndInsy = [
+        session('08:00', '09:00', 'PROG7312', 'CR3'),
+        session('10:00', '11:00', 'INSY7315', 'CR3')
+      ];
+      const tuesdayProgBothRooms = [
+        session('08:00', '09:00', 'PROG7312', 'CR3'),
+        session('10:00', '11:00', 'PROG7312', 'CR2')
+      ];
+      const wednesdayAfternoon = [
+        session('13:00', '14:00', 'INSY7314', 'CR4'),
+        session('15:00', '16:00', 'PROG7314', 'CR4')
+      ];
+      const thursdayProg = [
+        session('10:00', '11:00', 'PROG7312', 'CR3')
+      ];
+      const thursdayInsy = [
+        session('08:00', '09:00', 'INSY7315', 'CR3')
+      ];
+      const thursdayInsyAndProg = [
+        session('08:00', '09:00', 'INSY7315', 'CR3'),
+        session('10:00', '11:00', 'PROG7312', 'CR3')
+      ];
+      const fridayCore = [
+        session('08:00', '09:00', 'PROG7314', 'CR3'),
+        session('10:00', '11:00', 'PROG7312', 'CR3')
+      ];
 
-      function withTuesdayAndThursday() {
-        return { Monday: clone(mondayCore), Tuesday: clone(tuesdayProg), Wednesday: clone(wednesdayAfternoon), Thursday: clone(thursdayProg), Friday: clone(fridayCore) };
-      }
-      function withThursdayInsy() {
-        return { Monday: clone(mondayCore), Tuesday: clone(tuesdayProg), Wednesday: clone(wednesdayAfternoon), Thursday: clone(thursdayInsyAndProg), Friday: clone(fridayCore) };
-      }
-      function withTuesdayInsy() {
-        return { Monday: clone(mondayCore), Tuesday: clone(tuesdayProgAndInsy), Wednesday: clone(wednesdayAfternoon), Thursday: clone(thursdayProg), Friday: clone(fridayCore) };
-      }
-      function withTuesdayNoThursday() {
-        return { Monday: clone(mondayCore), Tuesday: clone(tuesdayProg), Wednesday: clone(wednesdayAfternoon), Thursday: [], Friday: clone(fridayCore) };
+      function standardWeek(tuesday, thursday) {
+        return {
+          Monday: clone(mondayCore),
+          Tuesday: clone(tuesday),
+          Wednesday: clone(wednesdayAfternoon),
+          Thursday: clone(thursday),
+          Friday: clone(fridayCore)
+        };
       }
 
       return [
-        week('Academic Week 1', '2026-07-13', withTuesdayAndThursday()),
-        week('Academic Week 2', '2026-07-20', withTuesdayInsy()),
-        week('Academic Week 3 FP1', '2026-07-27', withTuesdayAndThursday()),
-        week('Academic Week 4 FP2', '2026-08-03', withThursdayInsy()),
+        week('Academic Week 1', '2026-07-13', standardWeek(tuesdayProg, thursdayProg)),
+        week('Academic Week 2', '2026-07-20', standardWeek(tuesdayProgAndInsy, thursdayProg)),
+        week('Academic Week 3 FP1', '2026-07-27', standardWeek(tuesdayProgBothRooms, [])),
+        week('Academic Week 4 FP2', '2026-08-03', standardWeek(tuesdayProgBothRooms, thursdayInsy)),
         week('Academic Week 5 FP3', '2026-08-10', {
           Monday: eventDay("WOMEN'S DAY", 'holiday'),
-          Tuesday: clone(tuesdayProg),
+          Tuesday: clone(tuesdayProgBothRooms),
           Wednesday: clone(wednesdayAfternoon),
-          Thursday: clone(thursdayProg),
+          Thursday: [],
           Friday: clone(fridayCore)
         }),
-        week('Catch Up Week', '2026-08-17', eventWeek('CATCH UP WEEK', 'catchup')),
-        week('Academic Week 6', '2026-08-24', withThursdayInsy()),
-        week('Academic Week 7 FP4', '2026-08-31', withTuesdayNoThursday()),
-        week('Academic Week 8 FP5', '2026-09-07', {
-          Monday: clone(mondayCore),
-          Tuesday: [],
-          Wednesday: clone(wednesdayAfternoon),
-          Thursday: clone(thursdayInsyAndProg),
-          Friday: clone(fridayCore)
-        }),
-        week('Academic Week 9 FP6', '2026-09-14', withTuesdayNoThursday()),
+        week('Catch Up Week', '2026-08-17', eventWeek('CATCH UP WEEK', 'catchup', '08:00', '11:00')),
+        week('Academic Week 6', '2026-08-24', standardWeek(tuesdayProgBothRooms, thursdayInsy)),
+        week('Academic Week 7 FP4', '2026-08-31', standardWeek(tuesdayProg, [])),
+        week('Academic Week 8 FP5', '2026-09-07', standardWeek([], thursdayInsyAndProg)),
+        week('Academic Week 9 FP6', '2026-09-14', standardWeek(tuesdayProg, [])),
         week('Assess Week', '2026-09-21', eventDaysWithClasses('TEST WEEK 2', 'assessment', {
           Monday: clone(mondayCore)
-        })),
-        week('Assess Week', '2026-09-28', eventWeek('TEST WEEK 2', 'assessment')),
-        week('Academic Week 10', '2026-10-05', {
-          Monday: clone(mondayCore),
-          Tuesday: [],
-          Wednesday: clone(wednesdayAfternoon),
-          Thursday: clone(thursdayInsyAndProg),
-          Friday: clone(fridayCore)
-        }),
-        week('Academic Week 11', '2026-10-12', withTuesdayNoThursday()),
-        week('Academic Week 12', '2026-10-19', {
-          Monday: clone(mondayCore),
-          Tuesday: [],
-          Wednesday: clone(wednesdayAfternoon),
-          Thursday: clone(thursdayInsyAndProg),
-          Friday: clone(fridayCore)
-        }),
-        week('Assessment Week', '2026-10-26', eventWeek('ASSESSMENT WEEK', 'assessment'))
+        }, '08:00', '11:00')),
+        week('Assess Week', '2026-09-28', eventWeek('TEST WEEK 2', 'assessment', '08:00', '11:00')),
+        week('Academic Week 10', '2026-10-05', standardWeek([], thursdayInsyAndProg)),
+        week('Academic Week 11', '2026-10-12', standardWeek(tuesdayProg, [])),
+        week('Academic Week 12', '2026-10-19', standardWeek([], thursdayInsyAndProg)),
+        week('Assessment Week', '2026-10-26', eventWeek('ASSESSMENT WEEK', 'assessment', '08:00', '11:00'))
       ];
     }
 
     function buildGroupTwoWeeks() {
-      const mondayAfternoon = [session('13:00', '14:00', 'PROG7314', 'CR4'), session('15:00', '16:00', 'INSY7314', 'CR4')];
-      const tuesdayProg = [session('10:00', '11:00', 'PROG7312', 'CR2')];
-      const tuesdayInsyAtTen = [session('10:00', '11:00', 'INSY7315', 'CR2')];
-      const tuesdayInsyAndProg = [session('08:00', '09:00', 'INSY7315', 'CR2'), session('10:00', '11:00', 'PROG7312', 'CR2')];
-      const wednesdayCore = [session('08:00', '09:00', 'PROG7314', 'CR2'), session('10:00', '11:00', 'INSY7314', 'CR2')];
-      const thursdayProg = [session('08:00', '09:00', 'PROG7312', 'CR2')];
-      const thursdayInsy = [session('08:00', '09:00', 'INSY7315', 'CR2')];
-      const fridayCore = [session('08:00', '09:00', 'PROG7312', 'CR2'), session('10:00', '11:00', 'PROG7314', 'CR2')];
+      const mondayAfternoon = [
+        session('13:00', '14:00', 'INSY7314', 'CR4'),
+        session('15:00', '16:00', 'PROG7314', 'CR4')
+      ];
+      const tuesdayProg = [
+        session('10:00', '11:00', 'PROG7312', 'CR2')
+      ];
+      const tuesdayInsyAtTen = [
+        session('10:00', '11:00', 'INSY7315', 'CR2')
+      ];
+      const tuesdayInsyAndProg = [
+        session('08:00', '09:00', 'INSY7315', 'CR2'),
+        session('10:00', '11:00', 'PROG7312', 'CR2')
+      ];
+      const wednesdayCore = [
+        session('08:00', '09:00', 'PROG7314', 'CR2'),
+        session('10:00', '11:00', 'INSY7314', 'CR2')
+      ];
+      const thursdayProgCr2 = [
+        session('08:00', '09:00', 'PROG7312', 'CR2')
+      ];
+      const thursdayProgCr2AndCr3 = [
+        session('08:00', '09:00', 'PROG7312', 'CR2'),
+        session('10:00', '11:00', 'PROG7312', 'CR3')
+      ];
+      const thursdayInsyAndProgCr3 = [
+        session('08:00', '09:00', 'INSY7315', 'CR2'),
+        session('10:00', '11:00', 'PROG7312', 'CR3')
+      ];
+      const fridayCore = [
+        session('08:00', '09:00', 'PROG7312', 'CR2'),
+        session('10:00', '11:00', 'PROG7314', 'CR2')
+      ];
 
-      function withTuesdayProgAndThursdayProg() {
-        return { Monday: clone(mondayAfternoon), Tuesday: clone(tuesdayProg), Wednesday: clone(wednesdayCore), Thursday: clone(thursdayProg), Friday: clone(fridayCore) };
-      }
-      function withTuesdayProgAndThursdayInsy() {
-        return { Monday: clone(mondayAfternoon), Tuesday: clone(tuesdayProg), Wednesday: clone(wednesdayCore), Thursday: clone(thursdayInsy), Friday: clone(fridayCore) };
-      }
-      function withTuesdayInsyAndThursdayProg() {
-        return { Monday: clone(mondayAfternoon), Tuesday: clone(tuesdayInsyAtTen), Wednesday: clone(wednesdayCore), Thursday: clone(thursdayProg), Friday: clone(fridayCore) };
-      }
-      function withTuesdayInsyAndProgNoThursday() {
-        return { Monday: clone(mondayAfternoon), Tuesday: clone(tuesdayInsyAndProg), Wednesday: clone(wednesdayCore), Thursday: [], Friday: clone(fridayCore) };
+      function standardWeek(tuesday, thursday) {
+        return {
+          Monday: clone(mondayAfternoon),
+          Tuesday: clone(tuesday),
+          Wednesday: clone(wednesdayCore),
+          Thursday: clone(thursday),
+          Friday: clone(fridayCore)
+        };
       }
 
       return [
-        week('Academic Week 1', '2026-07-13', withTuesdayProgAndThursdayProg()),
-        week('Academic Week 2', '2026-07-20', withTuesdayInsyAndThursdayProg()),
-        week('Academic Week 3 FP1', '2026-07-27', withTuesdayProgAndThursdayProg()),
-        week('Academic Week 4 FP2', '2026-08-03', withTuesdayProgAndThursdayInsy()),
+        week('Academic Week 1', '2026-07-13', standardWeek(tuesdayProg, thursdayProgCr2)),
+        week('Academic Week 2', '2026-07-20', standardWeek(tuesdayInsyAtTen, thursdayProgCr2)),
+        week('Academic Week 3 FP1', '2026-07-27', standardWeek([], thursdayProgCr2AndCr3)),
+        week('Academic Week 4 FP2', '2026-08-03', standardWeek([], thursdayInsyAndProgCr3)),
         week('Academic Week 5 FP3', '2026-08-10', {
           Monday: eventDay("WOMEN'S DAY", 'holiday'),
-          Tuesday: clone(tuesdayProg),
+          Tuesday: [],
           Wednesday: clone(wednesdayCore),
-          Thursday: clone(thursdayProg),
+          Thursday: clone(thursdayProgCr2AndCr3),
           Friday: clone(fridayCore)
         }),
-        week('Catch Up Week', '2026-08-17', eventWeek('CATCH UP WEEK', 'catchup')),
-        week('Academic Week 6', '2026-08-24', withTuesdayProgAndThursdayInsy()),
-        week('Academic Week 7 FP4', '2026-08-31', withTuesdayProgAndThursdayProg()),
-        week('Academic Week 8 FP5', '2026-09-07', withTuesdayInsyAndProgNoThursday()),
-        week('Academic Week 9 FP6', '2026-09-14', withTuesdayProgAndThursdayProg()),
+        week('Catch Up Week', '2026-08-17', eventWeek('CATCH UP WEEK', 'catchup', '08:00', '11:00')),
+        week('Academic Week 6', '2026-08-24', standardWeek([], thursdayInsyAndProgCr3)),
+        week('Academic Week 7 FP4', '2026-08-31', standardWeek([], thursdayProgCr2AndCr3)),
+        week('Academic Week 8 FP5', '2026-09-07', standardWeek(tuesdayInsyAndProg, [])),
+        week('Academic Week 9 FP6', '2026-09-14', standardWeek([], thursdayProgCr2AndCr3)),
         week('Assess Week', '2026-09-21', eventDaysWithClasses('TEST WEEK 2', 'assessment', {
           Monday: clone(mondayAfternoon)
-        })),
-        week('Assess Week', '2026-09-28', eventWeek('TEST WEEK 2', 'assessment')),
-        week('Academic Week 10', '2026-10-05', withTuesdayInsyAndProgNoThursday()),
-        week('Academic Week 11', '2026-10-12', withTuesdayProgAndThursdayProg()),
-        week('Academic Week 12', '2026-10-19', withTuesdayInsyAndProgNoThursday()),
-        week('Assessment Week', '2026-10-26', eventWeek('ASSESSMENT WEEK', 'assessment'))
+        }, '13:00', '16:00')),
+        week('Assess Week', '2026-09-28', eventWeek('TEST WEEK 2', 'assessment', '08:00', '11:00')),
+        week('Academic Week 10', '2026-10-05', standardWeek(tuesdayInsyAndProg, [])),
+        week('Academic Week 11', '2026-10-12', standardWeek([], thursdayProgCr2AndCr3)),
+        week('Academic Week 12', '2026-10-19', standardWeek(tuesdayInsyAndProg, [])),
+        week('Assessment Week', '2026-10-26', eventWeek('ASSESSMENT WEEK', 'assessment', '08:00', '11:00'))
       ];
     }
 
