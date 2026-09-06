@@ -2,7 +2,7 @@
 <html lang="en" data-theme="light" data-group="1">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="description" content="BCAD Year 3 PAS and Semester 2 timetable dashboard.">
 <meta name="color-scheme" content="light dark">
 <meta name="referrer" content="strict-origin-when-cross-origin">
@@ -1515,16 +1515,97 @@ a:focus-visible {
 }
 
 @media (max-width: 520px) {
+  /* Keep the title, controls and countdown in predictable rows on phones. */
   .header-top {
-    gap: 0.55rem 0.65rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "heading actions"
+      "countdown countdown";
+    align-items: start;
+    gap: 0.65rem 0.7rem;
   }
 
   .header-left {
-    flex-basis: 170px;
+    display: contents;
   }
 
   .header-left h1 {
-    font-size: clamp(1.28rem, 6vw, 1.55rem);
+    grid-area: heading;
+    min-width: 0;
+    font-size: clamp(1.3rem, 6vw, 1.6rem);
+    line-height: 1.08;
+  }
+
+  .header-actions {
+    grid-area: actions;
+    align-self: start;
+    margin-left: 0;
+  }
+
+  .assignment-countdown {
+    grid-area: countdown;
+    display: flex;
+    width: 100%;
+    max-width: none;
+    flex-wrap: wrap;
+    justify-content: center;
+    column-gap: 0.32rem;
+    row-gap: 0.12rem;
+    margin-top: 0;
+    padding: 0.5rem 0.65rem;
+    border-radius: 10px;
+    font-size: clamp(0.82rem, 3.55vw, 0.96rem);
+    line-height: 1.18;
+    white-space: normal;
+  }
+
+  .dashboard-tabs {
+    margin-top: 0.15rem;
+  }
+
+  /* Move calendar arrows into the title row so they do not cover dates. */
+  .cal-nav {
+    top: 0.85rem;
+    width: 32px;
+    height: 32px;
+    transform: none;
+    font-size: 1.05rem;
+  }
+
+  .cal-nav:hover {
+    transform: none;
+  }
+
+  .cal-nav-prev {
+    right: 3rem;
+    left: auto;
+  }
+
+  .cal-nav-next {
+    right: 0.75rem;
+  }
+
+  .cal {
+    padding: 0.9rem;
+  }
+
+  .cal-title {
+    min-height: 32px;
+    margin-bottom: 0.65rem;
+    padding-right: 4.7rem;
+  }
+
+  .cal-grid {
+    gap: 0.2rem;
+  }
+
+  .cal-day {
+    font-size: 0.9rem;
+  }
+
+  .cal-dots {
+    margin-top: 0.4rem;
   }
 
   .materials-grid {
@@ -1532,35 +1613,42 @@ a:focus-visible {
   }
 }
 
-@media (max-width: 520px) {
-  .assignment-countdown {
-    gap: 0.22em;
-    margin-top: 0.4rem;
-    padding: 0.38rem 0.52rem 0.4rem;
-    border-radius: 10px;
-    font-size: clamp(0.78rem, 3.45vw, 0.94rem);
-  }
-}
-
 @media (max-width: 380px) {
+  .header-top {
+    gap: 0.55rem 0.5rem;
+  }
+
+  .header-left h1 {
+    font-size: clamp(1.16rem, 6vw, 1.35rem);
+  }
+
   .header-actions {
-    gap: 0.4rem;
+    gap: 0.35rem;
   }
 
   .group-switch {
-    flex-basis: 96px;
-    inline-size: 96px;
-    min-inline-size: 96px;
+    flex-basis: 90px;
+    inline-size: 90px;
+    min-inline-size: 90px;
   }
 
   .theme-toggle {
-    width: 40px;
-    height: 40px;
+    width: 38px;
+    height: 38px;
   }
 
   .group-btn {
-    min-block-size: 34px;
-    font-size: 0.72rem;
+    min-block-size: 32px;
+    font-size: 0.7rem;
+  }
+
+  .assignment-countdown {
+    padding-inline: 0.48rem;
+    font-size: 0.8rem;
+  }
+
+  .cal {
+    padding-inline: 0.72rem;
   }
 }
 
