@@ -28,7 +28,7 @@
     // Use safe defaults if storage is blocked.
   }
 
-  const systemPrefersDark = window.matchMedia?.("(prefers-color-scheme: dark)").matches === true;
+  const systemPrefersDark = window.matchMedia?.("(prefers-color-scheme: dark)")?.matches === true;
   root.dataset.theme = storedTheme === "light" || storedTheme === "dark"
     ? storedTheme
     : (systemPrefersDark ? "dark" : "light");
@@ -57,10 +57,6 @@
   --ui-accent: #111827;
   --ui-accent-contrast: #ffffff;
   --ui-accent-soft: #eef2f7;
-  --accent-green: #22c55e;
-  --accent-orange: #f97316;
-  --accent-purple: #8b5cf6;
-  --accent-purple-bg: #f5f3ff;
 
   --bg: #f4f7fb;
   --surface: #ffffff;
@@ -72,11 +68,9 @@
   --text-secondary: #41506a;
   --text-dim: #718096;
   --hover-bg: #f7f9fc;
-  --tag-bg: #eef2f7;
   --shadow: 0 1px 2px rgb(15 23 42 / 4%), 0 8px 24px rgb(15 23 42 / 4%);
   --shadow-raised: 0 12px 32px rgb(15 23 42 / 9%);
   --radius-card: 18px;
-  --radius-control: 12px;
   --tooltip-bg: #111827;
   --tooltip-text: #ffffff;
   --focus-ring: rgb(17 24 39 / 22%);
@@ -109,10 +103,6 @@
   --ui-accent: #f1f5f9;
   --ui-accent-contrast: #0b1220;
   --ui-accent-soft: rgb(241 245 249 / 11%);
-  --accent-green: #4ade80;
-  --accent-orange: #fb923c;
-  --accent-purple: #a78bfa;
-  --accent-purple-bg: rgb(167 139 250 / 10%);
 
   --bg: #0b1220;
   --surface: #121d2f;
@@ -124,7 +114,6 @@
   --text-secondary: #cbd5e1;
   --text-dim: #94a3b8;
   --hover-bg: rgb(255 255 255 / 4%);
-  --tag-bg: rgb(255 255 255 / 8%);
   --shadow: 0 1px 2px rgb(0 0 0 / 18%), 0 10px 28px rgb(0 0 0 / 15%);
   --shadow-raised: 0 14px 34px rgb(0 0 0 / 28%);
   --tooltip-bg: #f1f5f9;
@@ -319,17 +308,6 @@ a:focus-visible {
   transition: none;
 }
 
-[data-theme="dark"] .theme-toggle {
-  background: var(--surface);
-  box-shadow: var(--shadow);
-}
-
-[data-theme="dark"] .toggle-knob {
-  transform: none;
-  background: transparent;
-  box-shadow: none;
-}
-
 .icon-sun,
 .icon-moon {
   position: absolute;
@@ -387,11 +365,6 @@ a:focus-visible {
 .tab-btn.active {
   background: var(--ui-accent);
   box-shadow: 0 4px 12px rgb(15 23 42 / 14%);
-  color: var(--ui-accent-contrast);
-}
-
-[data-theme="dark"] .tab-btn.active {
-  background: var(--ui-accent);
   color: var(--ui-accent-contrast);
 }
 
@@ -591,14 +564,6 @@ a:focus-visible {
   font-weight: 800;
 }
 
-.cal-day.today::before {
-  display: none;
-}
-
-[data-theme="dark"] .cal-day.today {
-  color: #07111f;
-}
-
 .cal-day.has-event {
   border: 2px solid color-mix(in srgb, var(--event-color, var(--accent-blue)) 62%, #0f172a);
   border-radius: 10px;
@@ -616,10 +581,6 @@ a:focus-visible {
   color: #07111f;
 }
 
-[data-theme="dark"] .cal-day.has-event.today {
-  color: #07111f;
-}
-
 [data-theme="dark"] .cal-day.has-event {
   border-color: var(--event-color, var(--accent-blue));
   box-shadow: 0 2px 6px rgb(0 0 0 / 22%);
@@ -632,10 +593,6 @@ a:focus-visible {
 .cal-day.event-INSY7315 { --event-color: var(--insy7315); --event-bg: var(--insy7315-bg); --event-text: var(--insy7315-text); }
 .cal-day.event-PROG7312 { --event-color: var(--prog7312); --event-bg: var(--prog7312-bg); --event-text: var(--prog7312-text); }
 .cal-day.event-PROG7314 { --event-color: var(--prog7314); --event-bg: var(--prog7314-bg); --event-text: var(--prog7314-text); }
-.cal-day.e-accent-blue { --event-color: var(--accent-blue); --event-bg: var(--accent-blue-soft); --event-text: var(--text); }
-.cal-day.e-accent-green { --event-color: var(--accent-green); --event-bg: rgb(34 197 94 / 14%); --event-text: var(--text); }
-.cal-day.e-accent-orange { --event-color: var(--accent-orange); --event-bg: rgb(249 115 22 / 14%); --event-text: var(--text); }
-.cal-day.e-accent-purple { --event-color: var(--accent-purple); --event-bg: rgb(139 92 246 / 14%); --event-text: var(--text); }
 
 .cal-day.past { opacity: 0.6; }
 .cal-day.has-event.past {
@@ -1095,7 +1052,6 @@ a:focus-visible {
 .tt-bg-cell { background: var(--surface); }
 .tt-bg-cell.lunch { background: var(--tt-muted-bg); }
 .tt-bg-cell.today-column { background: var(--ui-accent-soft); }
-.tt-bg-cell.today-column.lunch { background: var(--ui-accent-soft); }
 
 .tt-lunch-label {
   display: flex;
@@ -1692,12 +1648,12 @@ a:focus-visible {
   <div class="header-top">
     <div class="header-left">
       <h1>BCAD Year 3 Dashboard</h1>
-      <div id="assignmentCountdown" class="assignment-countdown" data-module="INSY7314" aria-live="polite" aria-label="Time remaining until the next assignment">
-        <span id="countdownAssignment">INSY7314 Part 1:</span>
-        <span id="countdownDays" class="countdown-value">10</span>
-        <span id="countdownDaysLabel">days</span>
-        <span id="countdownHours" class="countdown-value">17</span>
-        <span id="countdownHoursLabel">hours</span>
+      <div id="assignmentCountdown" class="assignment-countdown" aria-live="polite" aria-label="Time remaining until the next assignment" hidden>
+        <span id="countdownAssignment"></span>
+        <span id="countdownDays" class="countdown-value"></span>
+        <span id="countdownDaysLabel"></span>
+        <span id="countdownHours" class="countdown-value"></span>
+        <span id="countdownHoursLabel"></span>
       </div>
     </div>
     <div class="header-actions">
@@ -1830,7 +1786,7 @@ a:focus-visible {
         </div>
       </div>
 
-      <a class="footer-link pas-footer" href="https://advtechonline.sharepoint.com/sites/Emeris/PAS/Forms/AllItems.aspx?id=%2Fsites%2FEmeris%2FPAS%2F2026%2FContact%20Full%20Time%2FFaculty%20of%20Science%20and%20Technology%2FSchool%20of%20Computer%20Science%2FBachelor%20of%20Computer%20and%20Information%20Science%20in%20Application%20Development%20BCAD0701&viewid=7d0c106d%2D7867%2D4ac2%2D84a6%2D782f2662169a&csf=1&CID=a833139f%2D0e51%2D4d4d%2Da457%2D785f3b3f26ba&FolderCTID=0x012000ABD6003807C8E844B9951A17F1456534" target="_blank" rel="noopener noreferrer">
+      <a class="footer-link pas-footer" href="https://advtechonline.sharepoint.com/sites/Emeris/PAS/Forms/AllItems.aspx?id=%2Fsites%2FEmeris%2FPAS%2F2026%2FContact%20Full%20Time%2FFaculty%20of%20Science%20and%20Technology%2FSchool%20of%20Computer%20Science%2FBachelor%20of%20Computer%20and%20Information%20Science%20in%20Application%20Development%20BCAD0701&amp;viewid=7d0c106d%2D7867%2D4ac2%2D84a6%2D782f2662169a&amp;csf=1&amp;CID=a833139f%2D0e51%2D4d4d%2Da457%2D785f3b3f26ba&amp;FolderCTID=0x012000ABD6003807C8E844B9951A17F1456534" target="_blank" rel="noopener noreferrer">
         <div class="fl-icon" aria-hidden="true">↗</div>
         <div class="footer-copy"><strong>Open the latest PAS</strong><span>View the official schedule on SharePoint</span></div>
         <div class="footer-arrow" aria-hidden="true">→</div>
@@ -1887,7 +1843,7 @@ a:focus-visible {
   function getPreferredTheme() {
     const storedTheme = readStoredTheme();
     if (storedTheme) return storedTheme;
-    return window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    return window.matchMedia?.("(prefers-color-scheme: dark)")?.matches ? "dark" : "light";
   }
 
   function applyTheme(theme) {
@@ -1961,26 +1917,22 @@ a:focus-visible {
     return pasModuleMetaByGroup[currentPasGroup];
   }
 
-  // Confirmed Term 2 assessment dates from PAS Version 3 (31 August 2026).
-  // ICE, resubmission and TBC-only entries are intentionally excluded.
+  // Term 2 submission dates from PAS Version 4 (23 September 2026).
+  // ICE and resubmission dates are outside this assignment calendar.
   const pasAssignments = [
     { date: "2026-08-17", module: "INSY7315", title: "Task 1" },
     { date: "2026-08-24", module: "PROG7314", title: "Part 1" },
     { date: "2026-09-07", module: "INSY7314", title: "Part 1" },
     { date: "2026-09-14", module: "PROG7312", title: "Part 1" },
     { date: "2026-09-22", module: "PROG7314", title: "Part 2" },
-    { date: "2026-09-28", module: "INSY7315", title: "Task 2" },
-    { date: "2026-10-05", module: "INSY7314", title: "Part 2" },
-    { date: "2026-10-12", module: "PROG7312", title: "Part 2" },
+    { date: "2026-10-05", module: "INSY7315", title: "Task 2" },
+    { date: "2026-10-12", module: "INSY7314", title: "Part 2" },
+    { date: "2026-10-19", module: "PROG7312", title: "Part 2" },
     { date: "2026-10-30", module: "INSY7315", title: "Project Report" },
-    { date: "2026-11-02", module: "INSY7314", title: "POE" },
     { date: "2026-11-06", module: "PROG7314", title: "POE" },
-    { date: "2026-11-10", module: "PROG7312", title: "POE" }
+    { date: "2026-11-09", module: "INSY7314", title: "POE" },
+    { date: "2026-11-13", module: "PROG7312", title: "POE" }
   ];
-
-  const validPasAssignments = pasAssignments
-    .filter((assignment) => /^2026-\d{2}-\d{2}$/.test(assignment.date) && pasModuleMetaByGroup["1"][assignment.module])
-    .sort((left, right) => left.date.localeCompare(right.date));
 
   const assignmentCountdown = document.getElementById("assignmentCountdown");
   const countdownAssignment = document.getElementById("countdownAssignment");
@@ -1995,11 +1947,7 @@ a:focus-visible {
   }
 
   function getNextAssignment(now) {
-    return validPasAssignments.find((assignment) => getAssignmentDeadline(assignment).getTime() > now.getTime()) || null;
-  }
-
-  function setCountdownValue(element, value) {
-    if (element) element.textContent = String(value);
+    return pasAssignments.find((assignment) => getAssignmentDeadline(assignment) > now) || null;
   }
 
   function renderAssignmentCountdown() {
@@ -2021,8 +1969,8 @@ a:focus-visible {
     const days = Math.floor(remainingSeconds / 86400);
     const hours = Math.floor((remainingSeconds % 86400) / 3600);
 
-    setCountdownValue(countdownDays, days);
-    setCountdownValue(countdownHours, hours);
+    countdownDays.textContent = String(days);
+    countdownHours.textContent = String(hours);
     countdownDaysLabel.textContent = days === 1 ? "day" : "days";
     countdownHoursLabel.textContent = hours === 1 ? "hour" : "hours";
     assignmentCountdown.setAttribute(
@@ -2032,10 +1980,10 @@ a:focus-visible {
   }
 
   renderAssignmentCountdown();
-  window.setInterval(renderAssignmentCountdown, 1000);
+  window.setInterval(renderAssignmentCountdown, 60_000);
 
   const assignmentsByDate = new Map();
-  validPasAssignments.forEach((assignment) => {
+  pasAssignments.forEach((assignment) => {
     if (!assignmentsByDate.has(assignment.date)) assignmentsByDate.set(assignment.date, []);
     assignmentsByDate.get(assignment.date).push(assignment);
   });
@@ -2296,8 +2244,16 @@ a:focus-visible {
     updateCalendarControls();
   });
   window.addEventListener("pageshow", () => {
+    refreshCalendar();
+    renderAssignmentCountdown();
     scrollToIndex(new Date().getMonth(), "auto");
     updateCalendarControls();
+  });
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) {
+      refreshCalendar();
+      renderAssignmentCountdown();
+    }
   });
   scheduleMidnightRefresh();
 })();
@@ -2597,6 +2553,7 @@ a:focus-visible {
     let currentGroup = readStoredGroup();
     let currentWeekIndex = 0;
     let scrollRaf = 0;
+    let resizeTimer = 0;
 
     const scroller = document.getElementById('ttWeekScroller');
     const prevBtn = document.getElementById('ttPrevWeek');
@@ -2864,8 +2821,8 @@ a:focus-visible {
       });
     });
     window.addEventListener('resize', function() {
-      window.clearTimeout(window.__ttResizeTimer);
-      window.__ttResizeTimer = window.setTimeout(function() {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(function() {
         scrollToWeek(currentWeekIndex, 'auto');
       }, 120);
     }, { passive: true });
