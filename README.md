@@ -19,13 +19,7 @@ A responsive **Semester 2 academic dashboard** for BCAD Year 3 at Emeris Durban 
 
 ## 📸 Screenshots
 
-### PAS & Assessment Calendar
-
-<img width="1470" alt="BCAD Year 3 PAS and assessment calendar" src="https://github.com/user-attachments/assets/b88f9571-d8dc-4c7a-8d52-ef70cb94c899" />
-
-### Weekly Timetable
-
-<img width="1470" alt="BCAD Year 3 weekly timetable" src="https://github.com/user-attachments/assets/65972181-9bfb-40d6-9d3f-b0d5c2e93795" />
+<img width="1463" height="779" alt="image" src="https://github.com/user-attachments/assets/a68ad34d-8cf1-4c93-a7e8-30756d978754" />
 
 ## 🛠️ Built With
 
