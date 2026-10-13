@@ -1,0 +1,14 @@
+{
+  "name": "bcad-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "BCAD Year 3 Semester 2 dashboard",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "dev": "node scripts/serve.mjs",
+    "start": "node scripts/serve.mjs",
+    "test": "node --test",
+    "check": "node --check assets/app.js && node --check assets/model.js && node --check assets/data.js && node --test"
+  }
+}

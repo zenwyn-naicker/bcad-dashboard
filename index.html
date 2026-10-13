@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en-ZA" data-theme="light" data-group="1">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="BCAD Year 3 dashboard: next deadline, today's classes, PAS calendar, Semester 2 timetable and every link you use daily.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#f4f7fb">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>BCAD Year 3 Dashboard</title>
+<meta property="og:type" content="website">
+<meta property="og:title" content="BCAD Year 3 Dashboard">
+<meta property="og:description" content="Next deadline, today's classes, PAS calendar, Semester 2 timetable and every link you use daily.">
+<meta property="og:url" content="https://zenwyn-naicker.github.io/bcad-dashboard/">
+<meta property="og:image" content="https://zenwyn-naicker.github.io/bcad-dashboard/assets/social-preview.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-title" content="BCAD Year 3">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23111827'/%3E%3Ctext x='32' y='42' font-family='Arial,sans-serif' font-weight='800' font-size='26' fill='%23fff' text-anchor='middle'%3EB3%3C/text%3E%3C/svg%3E">
+<script>
+(() => {
+  "use strict";
+  const keys = Object.freeze({ theme: "bcad-theme", group: "bcad-timetable-group", links: "bcad-links-v1" });
+  window.BCAD_KEYS = keys;
+  const root = document.documentElement;
+  let theme = null;
+  let group = null;
+  try { theme = localStorage.getItem(keys.theme); group = localStorage.getItem(keys.group); } catch { /* storage blocked */ }
+  const prefersDark = window.matchMedia?.("(prefers-color-scheme: dark)").matches === true;
+  root.dataset.theme = theme === "light" || theme === "dark" ? theme : (prefersDark ? "dark" : "light");
+  root.dataset.group = group === "2" ? "2" : "1";
+  root.dataset.groupChosen = group === "1" || group === "2" ? "yes" : "no";
+})();
+</script>
+<link rel="preload" href="./assets/fonts/outfit-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="./assets/styles.css">
+<link rel="modulepreload" href="./assets/app.js">
+<link rel="modulepreload" href="./assets/model.js">
+<link rel="modulepreload" href="./assets/data.js">
+</head>
+<body>
+<a class="skip-link" href="#pageTitle">Skip to content</a>
+<div class="app">
+  <aside id="sidebar" class="sidebar" aria-label="Sidebar" tabindex="-1">
+    <div class="sb-top">
+      <div class="sb-head">
+        <a class="brand" href="#" data-action="view" data-view="overview" aria-label="BCAD Year 3 Dashboard, overview">
+          <span class="brand-mark" aria-hidden="true">B3</span>
+          <span class="brand-text"><strong>BCAD Year 3</strong><small>Semester 2 · 2026</small></span>
+        </a>
+        <button class="icon-btn icon-btn-sm sb-close" type="button" data-action="close-drawer" aria-label="Close menu">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <nav class="sb-nav" aria-label="Dashboard views">
+        <button type="button" data-action="view" data-view="overview" data-nav>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11 12 4l8 7v8.5a1 1 0 0 1-1 1h-4.5V15h-5v5.5H5a1 1 0 0 1-1-1Z"/></svg>
+          Overview
+        </button>
+        <button type="button" data-action="view" data-view="timetable" data-nav>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="3"/><path d="M3.5 9.5h17M9.5 9.5v10"/></svg>
+          Timetable
+        </button>
+        <button type="button" data-action="view" data-view="deadlines" data-nav>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4M9 15.2l2 2 4-4"/></svg>
+          Deadlines
+          <span class="count" data-count title="Upcoming assessments" hidden></span>
+        </button>
+      </nav>
+    </div>
+
+    <div class="sb-scroll">
+      <section aria-labelledby="sbModulesLabel">
+        <h2 id="sbModulesLabel" class="sb-label">Modules</h2>
+        <div id="sideModules" class="sb-modules"></div>
+      </section>
+      <section aria-labelledby="sbLinksLabel">
+        <h2 id="sbLinksLabel" class="sb-label">Links</h2>
+        <div id="links" class="sb-links"></div>
+      </section>
+    </div>
+
+    <footer class="sb-footer"><a href="https://github.com/zenwyn-naicker/bcad-dashboard" target="_blank" rel="noopener noreferrer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 7-5 5 5 5m8-10 5 5-5 5m-3-13-2 16"/></svg>Source on GitHub<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></a></footer>
+  </aside>
+
+  <div class="scrim" data-action="close-drawer" aria-hidden="true"></div>
+
+  <div class="main">
+    <header class="mobilebar">
+      <button class="icon-btn" type="button" data-action="menu" aria-label="Open menu" aria-controls="sidebar" aria-expanded="false">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <a class="mobilebar-title" href="#" data-action="view" data-view="overview" aria-label="BCAD Year 3, go to overview">BCAD Year 3</a>
+    </header>
+
+    <main class="content">
+      <header class="page-head">
+        <div class="page-heading"><h1 id="pageTitle" class="page-title" tabindex="-1">Overview</h1><p id="pageDate" class="page-date"></p></div>
+        <div class="head-actions">
+          <div class="group-switch" role="radiogroup" aria-label="Class group">
+            <button class="group-btn" type="button" role="radio" data-action="group" data-group="1" title="Group 1 (press G to switch)"><span class="group-btn-label">Group 1</span></button>
+            <button class="group-btn" type="button" role="radio" data-action="group" data-group="2" title="Group 2 (press G to switch)"><span class="group-btn-label">Group 2</span></button>
+          </div>
+          <button class="theme-toggle" type="button" data-action="theme" title="Switch light or dark mode" aria-label="Switch light or dark mode">
+            <div class="toggle-knob" aria-hidden="true">
+              <svg class="icon-sun" viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z"/></svg>
+              <svg class="icon-moon" viewBox="0 0 24 24" fill="currentColor" focusable="false"><path fill-rule="evenodd" d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 01.818.162z" clip-rule="evenodd"/></svg>
+            </div>
+          </button>
+        </div>
+      </header>
+
+      <div id="onboard" class="onboard" hidden>
+        <p><strong>Which group are you in?</strong> Your timetable and lecturers follow this choice. Saved on this device.</p>
+        <div class="onboard-actions">
+          <button class="btn btn-primary btn-sm" type="button" data-action="group" data-group="1" data-announce>Group 1</button>
+          <button class="btn btn-sm" type="button" data-action="group" data-group="2" data-announce>Group 2</button>
+        </div>
+      </div>
+
+      <!-- ================= OVERVIEW ================= -->
+      <section class="view" data-view-panel="overview" aria-label="Overview">
+        <div class="ov-top">
+          <article id="next" class="card next-card" aria-label="Next deadline"></article>
+          <article id="today" class="card today-card" aria-label="Today"></article>
+        </div>
+
+        <section class="cal-zone" aria-labelledby="calZoneTitle">
+          <div class="cal-zone-head">
+            <h2 id="calZoneTitle" class="sec-title">PAS calendar</h2>
+            <a class="quiet-link" data-src="pas" target="_blank" rel="noopener noreferrer">Official PAS <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8.5 7H17v8.5"/></svg></a>
+          </div>
+          <div id="calendarLegend" class="calendar-legend" aria-label="Calendar module colours"></div>
+          <div class="calendars-wrapper">
+            <div class="calendar-navigation" role="group" aria-label="Calendar navigation">
+              <button id="calPrev" class="cal-nav" type="button" aria-controls="calScroller" aria-label="Previous month"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg></button>
+              <button class="cal-today" type="button" data-action="calendar-today" aria-controls="calScroller">Today</button>
+              <button id="calNext" class="cal-nav" type="button" aria-controls="calScroller" aria-label="Next month"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>
+            </div>
+            <div id="calScroller" class="calendars" aria-label="PAS calendar"></div>
+          </div>
+        </section>
+
+      </section>
+
+      <!-- ================= TIMETABLE ================= -->
+      <section class="view" data-view-panel="timetable" aria-label="Timetable" hidden>
+        <article id="tt" class="tt-card"></article>
+      </section>
+
+      <!-- ================= DEADLINES ================= -->
+      <section class="view" data-view-panel="deadlines" aria-label="Deadlines" hidden>
+        <article id="dlPanel" class="card"></article>
+      </section>
+
+    </main>
+  </div>
+</div>
+<nav class="bottom-nav" aria-label="Mobile dashboard views">
+  <button type="button" data-action="view" data-view="overview" data-nav><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m3 11 9-8 9 8v9H14v-6h-4v6H3Z"/></svg><span>Overview</span></button>
+  <button type="button" data-action="view" data-view="timetable" data-nav><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M3 10h18M8 2v5M16 2v5M10 10v11"/></svg><span>Timetable</span></button>
+  <button type="button" data-action="view" data-view="deadlines" data-nav><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M8 2v5M16 2v5m-8 8 3 3 5-6"/></svg><span>Deadlines</span></button>
+</nav>
+<dialog id="assessmentDialog" class="assessment-dialog" aria-labelledby="assessmentTitle">
+  <div class="assessment-dialog-head"><h2 id="assessmentTitle">Assessment details</h2><button class="icon-btn" type="button" data-action="close-assessment" aria-label="Close assessment details"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg></button></div>
+  <div id="assessmentBody"></div>
+</dialog>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden inert></div>
+<noscript><p class="noscript">Please enable JavaScript to use the timetable and assessment controls. The official PAS is available from Emeris SharePoint.</p></noscript>
+
+<script type="module" src="./assets/app.js"></script>
+</body>
+</html>
